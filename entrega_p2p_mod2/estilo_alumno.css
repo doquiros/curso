@@ -1,0 +1,136 @@
+@charset "utf-8";
+/* CSS Document */
+body, html {
+	margin: 0px;
+}
+article {
+    font-family: 'Lato', sans-serif;
+    grid-gap: 1rem;
+    padding:1rem;
+}
+
+nav {
+	font-family: 'Lato', sans-serif;
+}
+nav ul{
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    justify-content: stretch;
+}
+
+nav li {
+    flex-grow: 1;
+}
+
+nav a{
+    border: 1px solid black;
+    color: black;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.5s;
+    padding:1em;
+    width: inherit;
+}
+
+.box {
+  background-color:white;
+  box-shadow: 3px 5px 28px 0px rgba(0,0,0,0.75);
+  border:5px solid white;
+  display:block;
+  width: 100%;
+  height: 100%;
+}
+
+.box video, .box iframe {
+  width: 100%;
+  height: 75%;
+}
+
+#video-box {
+  grid-area: a;
+}
+
+#responsive-box {
+  grid-area: b;
+}
+
+#youtube-box {
+  grid-area: c;
+}
+
+nav a:hover{
+  background-color:#4fc3f7; 
+}
+
+footer {
+  display:block;
+  width: 100%;
+  color: white;
+  font-family: "Lato", sans-serif;
+  font-size:0.8em;
+  padding: 0.3rem;
+  padding-left: 2.2em;
+  background-color: #666;
+}
+
+h1 {
+  text-transform: uppercase;
+  font-family: 'Lato', sans-serif;
+  margin: 1rem 1rem 0rem 1rem;
+  font-size:1.2em;
+}
+
+h2 {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.2rem;
+	font-weight: 300;
+	margin-top: 0;
+	border-bottom-width: 1px;
+	border-bottom-style: dashed;
+  border-bottom-color: #19191B;
+}
+
+@media (orientation: landscape ) {
+
+  a {
+  	margin-right:0.2em;
+  }
+  nav ul {
+    flex-direction: row;
+  }
+  article {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: 1fr;
+    grid-template-areas: 
+      "a b c";
+    justify-items:stretch;
+    align-items:stretch;
+    height: 75%;
+  }
+}
+
+@media (orientation:portrait){
+  a {
+    margin-bottom:0.2em;
+  }
+  nav ul {
+      flex-direction: column;
+  }
+  
+  article {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas: 
+      "a"
+      "b"
+      "c";
+    height: 200%;
+  }
+}

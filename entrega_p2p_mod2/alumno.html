@@ -1,0 +1,60 @@
+<html>
+<head><title>HTML/CSS Alumno</title><meta charset="utf-8">
+<link href="estilo_alumno.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+</head>
+<body>
+<nav id="menu">
+  <ul>
+  <li><a href="index.html">INICIO</a></li>
+  <li><a href="alumno.html">ALUMNO</a></li>
+  <li><a href="https://developer.mozilla.org/es/">EJEMPLO 1</a></li>
+  <li><a href="https://www.w3schools.com/">EJEMPLO 2</a></li>
+  </ul>
+</nav>
+<section id="main">
+  <h1>HTML5 - CSS</h1>
+  <article>
+    <div class="box" id="video-box">
+    <video controls>
+      <source src="video/MOOC.mov" type="video/mp4"/>
+      <source src="video/MOOC.mp4" type="video/mp4"/>
+      <source src="video/MOOC.webm" type="video/webm"/>
+      <source src="video/MOOC.ogv" type="video/ogg"/>
+      <!-- Este texto solo se ve si el navegador admite ninguno de los videos anteriores -->
+      video MOOC
+    </video>
+    <div class="description">
+      <h2>Video</h2>
+      <p>HTML5 Video Player</p>
+    </div>
+    </div>
+    <div class="box" id="responsive-box">
+    <iframe src="https://www.fork-cms.com">
+      <!-- Este texto solo se ve si el navegador no soporta iframes -->
+      El navegador no soporta iframes
+    </iframe>
+    <div class="desciption">
+      <h2>Responsive example</h2>
+      <p>Fork CRM</p>
+    </div>
+    </div>
+    <div class="box" id="youtube-box">
+    <iframe src="https://www.youtube.com/embed/km9Il_-FHjw" 
+      frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; 
+      picture-in-picture" allowfullscreen>
+    </iframe>
+    <div class="desciption">
+      <h2>Youtube</h2>
+      <p>Jazz</p>
+    </div>
+    
+    </div>
+    <!-- <div class="box" id="empty-box"></div> -->
+  </article>
+  <aside> 
+  </aside>
+</section>
+<footer>&copy; Nombre del Alumno</footer>
+</body>
+</html>
