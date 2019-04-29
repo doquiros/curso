@@ -16,41 +16,94 @@
 	}
 </style>
 <script type="text/javascript">
-  var num, acc = 0, op = "";
+  var num, acc = 0, next_op = "";
 	
 	function show_acc()	{	document.getElementById("answer").innerHTML = acc.toString();	}
 	function clear_input()	{	num.value = "";	}
-	
-  function mas()
-	{ 
-		acc = num.value;
-		show_acc();
-		clear_input();
-		op = "+"; 
+	function bindKeys()
+	{
+		document.onkeypress = function(e){
+			switch (e.keyCode){
+				case 0x0d:
+					num.blur(0); 
+					igual();
+					break;
+				case 0x2a:
+					num.blur(0);
+					calcular("*");
+					break;
+				case 0x2b:
+					num.blur(0);
+					calcular("+");
+					break;
+				case 0x2d:
+					num.blur(0);
+					calcular("-");
+					break;
+				case 0x2f:
+					num.blur(0);
+					calcular("/")
+					break;
+			}
+
+			if(e.keyCode >= 0x30 && e.keyCode < 0x40 || e.keyCode === 0x2e)
+				num.focus();
+			
+			
+		};
 	}
-  function menos() { 
-		acc = num.value;  
+  function calcular(op) {
+	
+		// Cargar nuevo valor, ejecutando la operacion que nos ordenaron:
+		switch(next_op)
+		{
+			case "+": 
+				acc = +acc + +num.value;
+				break;
+			case "-":
+				acc = +acc - +num.value;
+				break;
+			case "*": 
+				acc = +acc * +num.value;
+				break;
+			case "/": 
+				acc = +acc / +num.value;
+				break;
+			case "":
+				acc = +num.value;
+				break;
+			default:
+				return;
+		}
+		
+		acc = acc.toString();
+
+		//Guardamos la operacion a ejecutar con el siguiente valor introducido
+		next_op = op;
+
+		//mostramos el resultado
 		show_acc();
+
+		//limpiamos la caja de entrada
 		clear_input();
-		op = "-"; 
+
 	}
 
-  function calcular() {
-    if (op === "+") {num.value = (+acc + +num.value)}
-    if (op === "-") {num.value = (+acc - +num.value)}
-    if (op === "*") {num.value = (+acc - +num.value)}
-    if (op === "/") {num.value = (+acc - +num.value)}
-		acc = num.value.toString();
-		show_acc();
-		clear_input();
+	function igual() {
+		calcular(next_op);
 		acc = 0;
-		op=""
-  }
+		next_op = "";
+	}
+
+	function mas() { calcular("+"); }
+	function menos() { calcular("-"); }
+	function por() { calcular("*"); }
+	function entre() { calcular("/"); }
 
   function inic ()
 	{
 		num = document.getElementById("num");
-		
+		bindKeys();
 	}
   function vaciar () {num.value = "";}
 </script>
@@ -58,10 +111,12 @@
 <body onLoad="inic()">
 	<p id="answer-box">Result: <span id="answer"> 0</span></p>
   Número:<p>
-  <input type="text" size="12" id="num" onClick="vaciar()" value="0" autofocus><p>
+  <input type="text" pattern="[0-9]*" size="12" id="num" onClick="vaciar()" autofocus><p>
   <button onClick="mas()">+</button>
   <button onClick="menos()">-</button>
-  <button onClick="calcular()">=</button>
+  <button onClick="por()">*</button>
+  <button onClick="entre()">/</button>
+	<button onClick="igual()">=</button>
   </p>
 </body>
 </html>
