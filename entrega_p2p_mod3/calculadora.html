@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ejemplo</title>
+<meta charset="utf-8">
+<style>
+	body {
+		border: 1px solid cadetblue;
+		width: 20em;
+		padding: 0em 1em 1em 1em;
+	}
+	#answer-box {
+		border: 1px solid cadetblue;
+		font-size: 20px;
+		font-family: "Open Sans", sans-serif;
+	}
+</style>
+<script type="text/javascript">
+  var num, acc = 0, op = "";
+	
+	function show_acc()	{	document.getElementById("answer").innerHTML = acc.toString();	}
+	function clear_input()	{	num.value = "";	}
+	
+  function mas()
+	{ 
+		acc = num.value;
+		show_acc();
+		clear_input();
+		op = "+"; 
+	}
+  function menos() { 
+		acc = num.value;  
+		show_acc();
+		clear_input();
+		op = "-"; 
+	}
+
+  function calcular() {
+    if (op === "+") {num.value = (+acc + +num.value)}
+    if (op === "-") {num.value = (+acc - +num.value)}
+    if (op === "*") {num.value = (+acc - +num.value)}
+    if (op === "/") {num.value = (+acc - +num.value)}
+		acc = num.value.toString();
+		show_acc();
+		clear_input();
+		acc = 0;
+		op=""
+  }
+
+  function inic ()
+	{
+		num = document.getElementById("num");
+		
+	}
+  function vaciar () {num.value = "";}
+</script>
+</head>
+<body onLoad="inic()">
+	<p id="answer-box">Result: <span id="answer"> 0</span></p>
+  Número:<p>
+  <input type="text" size="12" id="num" onClick="vaciar()" value="0" autofocus><p>
+  <button onClick="mas()">+</button>
+  <button onClick="menos()">-</button>
+  <button onClick="calcular()">=</button>
+  </p>
+</body>
+</html>
