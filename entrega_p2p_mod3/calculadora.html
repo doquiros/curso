@@ -14,9 +14,33 @@
 		font-size: 20px;
 		font-family: "Open Sans", sans-serif;
 	}
+	#op-buttons {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+		grid-template-areas:
+			"mas menos por entre elevado"
+			"cuadrado inversa raiz entera null"
+			"igual igual igual igual igual";
+		grid-gap: 1rem;
+	}
+	#mas { grid-area: mas; }
+	#menos { grid-area: menos; }
+	#por { grid-area: por; }
+	#entre { grid-area: entre; }
+	#elevado { grid-area: elevado; }
+	#cuadrado { grid-area: cuadrado; }
+	#inversa { grid-area: inversa; }
+	#raiz { grid-area: raiz; }
+	#entera { grid-area: entera; }
+	#igual { grid-area: igual; }
 </style>
 <script type="text/javascript">
-  var num, acc = 0, next_op = "";
+	var num, acc = 0, next_op = "";
+
+	function dbg(msg) {
+		document.getElementById("dbg").innerHTML = document.getElementById("dbg").innerHTML + "<br\> :" + msg;
+	}
 	
 	function show_acc()	{	document.getElementById("answer").innerHTML = acc.toString();	}
 	function clear_input()	{	num.value = "";	}
@@ -25,35 +49,38 @@
 		document.onkeypress = function(e){
 			switch (e.keyCode){
 				case 0x0d:
-					num.blur(0); 
+					num.blur(0);
 					igual();
 					break;
 				case 0x2a:
-					num.blur(0);
-					calcular("*");
-					break;
 				case 0x2b:
-					num.blur(0);
-					calcular("+");
-					break;
 				case 0x2d:
-					num.blur(0);
-					calcular("-");
-					break;
 				case 0x2f:
 					num.blur(0);
-					calcular("/")
+					calcular(String.fromCharCode(e.keyCode));
 					break;
 			}
 
-			if(e.keyCode >= 0x30 && e.keyCode < 0x40 || e.keyCode === 0x2e)
+			if((e.keyCode >= 0x30 && e.keyCode < 0x40) || e.keyCode === 0x2e)
+			{
+				
+				if(isNaN(num.value) || num.value === "0")
+				{
+					dbg("num zero or not number ");
+					num.value = String.fromCharCode(e.keyCode);
+				}
+				else
+				{
+					num.value += String.fromCharCode(e.keyCode);
+				}
 				num.focus();
-			
-			
+				
+			}
 		};
 	}
-  function calcular(op) {
 	
+	function calcular(op) {
+		dbg("calcular");
 		// Cargar nuevo valor, ejecutando la operacion que nos ordenaron:
 		switch(next_op)
 		{
@@ -69,13 +96,16 @@
 			case "/": 
 				acc = +acc / +num.value;
 				break;
+			case "^": 
+				acc = (+acc) ** (+num.value);
+				break;
 			case "":
 				acc = +num.value;
 				break;
 			default:
 				return;
 		}
-		
+
 		acc = acc.toString();
 
 		//Guardamos la operacion a ejecutar con el siguiente valor introducido
@@ -99,24 +129,33 @@
 	function menos() { calcular("-"); }
 	function por() { calcular("*"); }
 	function entre() { calcular("/"); }
+	function pow() { calcular("^"); }
 
-  function inic ()
+	function inic ()
 	{
 		num = document.getElementById("num");
 		bindKeys();
 	}
-  function vaciar () {num.value = "";}
+	function vaciar () {num.value = "";}
 </script>
 </head>
 <body onLoad="inic()">
 	<p id="answer-box">Result: <span id="answer"> 0</span></p>
-  Número:<p>
-  <input type="text" pattern="[0-9]*" size="12" id="num" onClick="vaciar()" autofocus><p>
-  <button onClick="mas()">+</button>
-  <button onClick="menos()">-</button>
-  <button onClick="por()">*</button>
-  <button onClick="entre()">/</button>
-	<button onClick="igual()">=</button>
-  </p>
+	Número:<p>
+	<input autofocus type="text" pattern="[0-9]*" size="12" id="num" onClick="vaciar()" onInput="dbg()" readonly="readonly"/><p>
+	</p>
+	<div id="op-buttons">
+	<button id="mas" onClick="mas()">+</button>
+	<button id="menos" onClick="menos()">-</button>
+	<button id="por" onClick="por()">*</button>
+	<button id="entre" onClick="entre()">/</button>
+	<button id="elevado" onClick="pow()">x^y</button>	
+	<button id="cuadrado" onClick="igual()">x<super>2</super></button>
+	<button id="inversa" onClick="igual()">1/x</button>
+	<button id="raiz" onClick="igual()">sqrt(x)</button>
+	<button id="entera" onClick="igual()">int(x)</button>
+	<button id="igual" onClick="igual()">=</button>
+	</div>
+	<div id="dbg"></div>
 </body>
 </html>
