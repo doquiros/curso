@@ -36,37 +36,63 @@
 	#igual { grid-area: igual; }
 </style>
 <script type="text/javascript">
-	var num, acc = 0, next_op = "";
+	/* Asociamos un numero a cada operacion:
+	 * suma: 0
+	 * resta: 1
+	 * producto: 2
+	 * division: 3
+	 * potenciacion: 4
+	 * cuadrado: 5
+	 * inversa: 6
+	 * raiz: 7
+	 * parte entera: 8
+	 * 
+	 * Y otro numero para el tipo de operacion:
+	 * unaria: 0
+	 * binaria: 1
+	 */
 
+	var num, acc = 0, next_op = -1;
+	var op2optype = [1, 1, 1, 1, 1, 0, 0, 0, 0];
+	
+	// Para las operaciones binarias se puede usar el teclado:
+	var symbol2op = {"+":0, "-":1, "*":2, "/":3, "^": 4}
 	function dbg(msg) {
 		document.getElementById("dbg").innerHTML = document.getElementById("dbg").innerHTML + "<br\> :" + msg;
 	}
 	
+	function vaciar () {num.value = "";}
 	function show_acc()	{	document.getElementById("answer").innerHTML = acc.toString();	}
 	function clear_input()	{	num.value = "";	}
+
 	function bindKeys()
 	{
+		// Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
+		// Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
 		document.onkeypress = function(e){
 			switch (e.keyCode){
-				case 0x0d:
+				case 0x0d: // tecla enter: igual
 					num.blur(0);
 					igual();
 					break;
-				case 0x2a:
-				case 0x2b:
-				case 0x2d:
-				case 0x2f:
-					num.blur(0);
-					calcular(String.fromCharCode(e.keyCode));
+				case 0x2a: // tecla *: suma
+				case 0x2b: // tecla +: suma
+				case 0x2d: // tecla -: resta
+				case 0x2f: // tecla /: division
+				case 0x5e: // tecla ^: potenciacion
+					if(num.value !== "")
+					{
+						num.blur(0);
+						calcular(symbol2op[String.fromCharCode(e.keyCode)]);
+					}
 					break;
 			}
 
-			if((e.keyCode >= 0x30 && e.keyCode < 0x40) || e.keyCode === 0x2e)
+			if((e.keyCode >= 0x30 && e.keyCode < 0x40) || e.keyCode === 0x2e || e.keyCode === 0x2d)
 			{
 				
-				if(isNaN(num.value) || num.value === "0")
+				if(num.value === "0")
 				{
-					dbg("num zero or not number ");
 					num.value = String.fromCharCode(e.keyCode);
 				}
 				else
@@ -80,40 +106,59 @@
 	}
 	
 	function calcular(op) {
+
 		dbg("calcular");
+
+
+		if(op2optype[op] === 1)
+			do_op = next_op;
+		else
+			do_op = op;
 		// Cargar nuevo valor, ejecutando la operacion que nos ordenaron:
-		switch(next_op)
+		switch(do_op)
 		{
-			case "+": 
+			case -1: //asignacion
+				acc = +num.value;
+				break;
+			case 0: //suma
 				acc = +acc + +num.value;
 				break;
-			case "-":
+			case 1: //resta
 				acc = +acc - +num.value;
 				break;
-			case "*": 
+			case 2:  //producto
 				acc = +acc * +num.value;
 				break;
-			case "/": 
+			case 3:  //division
 				acc = +acc / +num.value;
 				break;
-			case "^": 
+			case 4:  //potenciacion
 				acc = (+acc) ** (+num.value);
 				break;
-			case "":
-				acc = +num.value;
+			case 5: //cuadrado
+				acc = (+num.value) ** 2;
+				break;
+			case 6: //inversa
+				acc = 1 / (+num.value);
+				break;
+			case 7: //raiz
+				acc = Math.sqrt(+num.value);
+				break;
+			case 8: //parte entera
+				acc = (+num.value) >= 0? Math.floor(num.value) : Math.ceil(num.value);
 				break;
 			default:
 				return;
 		}
-
 		acc = acc.toString();
 
 		//Guardamos la operacion a ejecutar con el siguiente valor introducido
-		next_op = op;
-
+		if(op2optype[op] === 1)
+			next_op = op;
+		else
+			next_op = -1;
 		//mostramos el resultado
 		show_acc();
-
 		//limpiamos la caja de entrada
 		clear_input();
 
@@ -122,38 +167,32 @@
 	function igual() {
 		calcular(next_op);
 		acc = 0;
-		next_op = "";
+		next_op = -1;
 	}
-
-	function mas() { calcular("+"); }
-	function menos() { calcular("-"); }
-	function por() { calcular("*"); }
-	function entre() { calcular("/"); }
-	function pow() { calcular("^"); }
 
 	function inic ()
 	{
 		num = document.getElementById("num");
 		bindKeys();
 	}
-	function vaciar () {num.value = "";}
+
 </script>
 </head>
 <body onLoad="inic()">
 	<p id="answer-box">Result: <span id="answer"> 0</span></p>
 	Número:<p>
-	<input autofocus type="text" pattern="[0-9]*" size="12" id="num" onClick="vaciar()" onInput="dbg()" readonly="readonly"/><p>
+	<input autofocus type="text" pattern="[0-9.+-]*" size="12" id="num" onClick="vaciar()" onInput="dbg()" readonly="readonly"/><p>
 	</p>
 	<div id="op-buttons">
-	<button id="mas" onClick="mas()">+</button>
-	<button id="menos" onClick="menos()">-</button>
-	<button id="por" onClick="por()">*</button>
-	<button id="entre" onClick="entre()">/</button>
-	<button id="elevado" onClick="pow()">x^y</button>	
-	<button id="cuadrado" onClick="igual()">x<super>2</super></button>
-	<button id="inversa" onClick="igual()">1/x</button>
-	<button id="raiz" onClick="igual()">sqrt(x)</button>
-	<button id="entera" onClick="igual()">int(x)</button>
+	<button id="mas" onClick="calcular(0)">+</button>
+	<button id="menos" onClick="calcular(1)">-</button>
+	<button id="por" onClick="calcular(2)">*</button>
+	<button id="entre" onClick="calcular(3)">/</button>
+	<button id="elevado" onClick="calcular(4)">x^y</button>	
+	<button id="cuadrado" onClick="calcular(5)">x<super>2</super></button>
+	<button id="inversa" onClick="calcular(6)">1/x</button>
+	<button id="raiz" onClick="calcular(7)">sqrt(x)</button>
+	<button id="entera" onClick="calcular(8)">int(x)</button>
 	<button id="igual" onClick="igual()">=</button>
 	</div>
 	<div id="dbg"></div>
