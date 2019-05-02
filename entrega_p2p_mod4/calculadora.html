@@ -252,16 +252,16 @@
 		<div class="numbers"><div>Número:</div><input autofocus type="text" pattern="[0-9.+-]*" size="12" readonly="readonly" id="num" class="number-box" /></div>
 		<div class="numbers"><div>Resultado:</div> <div class="number-box" id="answer"> 0</div></div>
 		<div id="op-buttons">
-			<button id="mas" onClick="calcular(0)">+</button>
-			<button id="menos" onClick="calcular(1)">-</button>
-			<button id="por" onClick="calcular(2)">*</button>
-			<button id="entre" onClick="calcular(3)">/</button>
-			<button id="elevado" onClick="calcular(4)">x^y</button>
-			<button id="cuadrado" onClick="calcular(5)">x<super>2</super></button>
-			<button id="inversa" onClick="calcular(6)">1/x</button>
-			<button id="raiz" onClick="calcular(7)">sqrt(x)</button>
-			<button id="entera" onClick="calcular(8)">int(x)</button>
-			<button id="igual" onClick="igual()">=</button>
+			<button onClick="calcular(0)" id="mas">+</button>
+			<button onClick="calcular(1)" id="menos">-</button>
+			<button onClick="calcular(2)" id="por">*</button>
+			<button onClick="calcular(3)" id="entre">/</button>
+			<button onClick="calcular(4)" id="elevado">x^y</button>
+			<button onClick="calcular(5)" id="cuadrado">x<super>2</super></button>
+			<button onClick="calcular(6)" id="inversa">1/x</button>
+			<button onClick="calcular(7)" id="raiz">sqrt(x)</button>
+			<button onClick="calcular(8)" id="entera">int(x)</button>
+			<button onClick="igual()" id="igual">=</button>
 		</div>
 	</div>
 	<div id="historial">Historial:<br/></div>
