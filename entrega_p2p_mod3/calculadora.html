@@ -7,8 +7,8 @@
 <style>
 	#calculadora {
 		border: 1px solid black;
-		width: 20em;
-		padding: 0em 1em 1em 1em;
+		width: auto;
+		padding: 1em;
 		background-color: lightgrey;
 		background-clip: border-box;
 	}
@@ -17,17 +17,26 @@
 		font-size: 20px;
 		text-align: right;
 	}
-	#answer-box {
-		width: inherit;
+	.number {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
-	#answer {
+	.number-box {
+		flex-grow:1;
 		border: 1px solid black;
 		font-size: 20px;
-		width: 100%;
+		margin-left: 1em;
+		width: 12em;
 		font-family: "Orbitron", sans-serif;
-		background-color: olive;
-		background-clip: border-box;
 		text-align: right;
+	}
+	#answer {
+		background-color: olive;
+		margin-bottom: 1em;
+	}
+	#num {
+		background-color: white;
 	}
 	#op-buttons {
 		display: grid;
@@ -49,13 +58,20 @@
 	#raiz { grid-area: raiz; }
 	#entera { grid-area: entera; }
 	#igual { grid-area: igual; }
+	#historial {
+	    margin: 1em;
+	    border: 1px solid black;
+	    background-color: lightgrey;
+	    font-family: "Orbitron", sans-serif;
+	    font-size: 12px;
+	}
 </style>
 <script type="text/javascript">
 	/* Asociamos un numero a cada operacion:
 	 * suma: 0
 	 * resta: 1
 	 * producto: 2
-	 * division: 3
+	  division: 3
 	 * potenciacion: 4
 	 * cuadrado: 5
 	 * inversa: 6
@@ -67,7 +83,7 @@
 	 * binaria: 1
 	 */
 
-	var num, acc = 0, next_op = -1;
+	var num, val="", acc = "0", next_op = -1;
 	var op2optype = [1, 1, 1, 1, 1, 0, 0, 0, 0];
 	
 	// Para las operaciones binarias se puede usar el teclado:
@@ -77,32 +93,34 @@
 	function vaciar () { num.value = "";}
 	function show_acc()	{ document.getElementById("answer").innerHTML = acc.toString(); }
 	function clear_input()	{ num.value = "0"; }
-	function historial(msg) { document.getElementById("historial").innerHTML = document.getElementById("historial").innerHTML + "<br/>" + msg; }
+	function historial(msg) { document.getElementById("historial").innerHTML = document.getElementById("historial").innerHTML + msg; }
 	function bindKeys()
 	{
 		// Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
 		// Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
 		document.onkeydown = function(e){
-			historial("keycode "+e.keyCode);
-			historial("key "+e.key);
-			
-			if(e.key === "-" && next_op !== -1)
+			//historial("key "+e.key);
+			k = e.key;
+			e.preventDefault();
+			if(k === "-" && val === "" && (acc === "0" || next_op !== -1))
 			{
-				num.value = String.fromCharCode(e.keyCode);
+			    val = k;
+			    num.value = k;
 			}
-			else if((e.keyCode >= 0x30 && e.keyCode < 0x40) || e.key === ".")
+			else if((!isNaN(k)) || k === ".")
 			{	
-				if(num.value === "0")
-					num.value = String.fromCharCode(e.keyCode);
-				else
-					num.value += String.fromCharCode(e.keyCode);
+			    val = val === ""? k : val + k;
+			    num.value = val;
 			}
-			else if (e.keyCode === 0x08)
+			else if(k  === "Backspace")
 			{
-				num.value = num.value.substring(0,num.value.length - 1);
+			    val = val.substring(0, val.length - 1);
+			    num.value = val;
+			    
 			}
 			else{
-				switch (e.key){
+				switch (k){
+					case "Enter":
 					case "=": // tecla enter: igual
 						num.blur(0);
 						igual();
@@ -111,17 +129,12 @@
 					case "+": // tecla +: suma
 					case "-": // tecla -: resta
 					case "^": // tecla ^: potenciacion
-						if(num.value !== "")
+					case "/": // tecla / : division
+						if(!isNaN(val))
 						{
 							num.blur(0);
-							calcular(symbol2op[keycode2op[e.keyCode]]);
+							calcular(symbol2op[k]);
 						}
-						break;
-					case "/": // tecla / : division
-						e.preventDefault();
-						num.blur(0);
-						calcular(3);
-						
 						break;
 					
 				}
@@ -131,85 +144,97 @@
 	
 	function calcular(op)
 	{
-		if(next_op === -1 && num.value === "0")
+		if(next_op === -1 && val === "")
 			operando = acc;
 		else
-			operando = num.value;
-
-		if(op2optype[op] === 1)
-			do_op = next_op;
+			operando = val;
+		if(op === -1)
+		    do_op = next_op;
+		else if(op2optype[op] === 1)
+		    do_op = next_op;
 		else
-			do_op = op;
+		    do_op = op;
 		
-		historial(((do_op > -1)? op2symbol[do_op] : "") + " " + operando);
+		//historial(((do_op > -1)? op2symbol[do_op] : "") + " " + operando);
 
-		next_op = op;
-		reset_next_op = 1;
+		//next_op = op;
+		//reset_next_op = 1;
 		// Cargar nuevo valor, ejecutando la operacion que nos ordenaron:
 		switch(do_op)
 		{
 			case -1: //asignacion
 				acc = +operando;
-				reset_next_op = 0;
 				break;
 			case 0: //suma
-				acc = +acc + +operando;
+				historial(acc + " + " + operando);	
+				acc = +acc + +operando;			    
 				break;
 			case 1: //resta
+				historial(acc + " - " + operando);
 				acc = +acc - +operando;
 				break;
 			case 2:  //producto
+				historial(acc + " * " + operando);
 				acc = +acc * +operando;
 				break;
 			case 3:  //division
+				historial(acc + " / " + operando);
 				acc = +acc / +operando;
 				break;
 			case 4:  //potenciacion
+				historial(acc + "^" + operando);
 				acc = (+acc) ** (+operando);
 				break;
 			case 5: //cuadrado
+				historial(operando + "^2");
 				acc = (+operando) ** 2;
 				break;
 			case 6: //inversa
+				historial("1/" + operando);
 				acc = 1 / (+operando);
 				break;
 			case 7: //raiz
+				historial("sqrt("+ operando + ")");
 				acc = Math.sqrt(+operando);
 				break;
 			case 8: //parte entera
-				acc = (+operando) >= 0? Math.floor(operando) : Math.ceil(operando);
+				historial("entero("+ operando + ")");
+				acc = (+operando >= 0)? Math.floor(operando) : Math.ceil(operando);
 				break;
 			default:
+				historial("Error: operacion desconocida");
 				return;
 		}
 		acc = acc.toString();
-
+		if(do_op !== -1)
+		  historial(" = " + acc + "<br>");
 		//Guardamos la operacion a ejecutar con el siguiente valor introducido
-		//if(op2optype[op] === 1)
-		//	next_op = op;
-		//else
-		if(reset_next_op === 1)
-			next_op = -1;
+		if(op2optype[op] === 1)
+			next_op = op;
+		
+		//if(reset_next_op === 1)
+		//	next_op = -1;
 		//mostramos el resultado
 		show_acc();
-		//limpiamos la caja de entrada
-		clear_input();
+		//limpiamos el valor de entrada
+		val = "";
 	}
 
 	function igual() {
 		if(next_op !== -1)
-		{
-			calcular(next_op);
-			historial("= "+acc);
-			next_op = -1;
+		{			
+			calcular(-1);
 		}
 		else
 		{
+			next_op=0;
+			calcular(-1);
 			acc = "0";
-			show_acc();
-			clear_input();
-			historial("= "+acc);
 		}
+                next_op = -1;
+                clear_input();
+                val = "";
+
 	}
 
 	function inic ()
@@ -223,10 +248,8 @@
 <body onLoad="inic()">
 	<h1>Bienvenidos a la calculadora de Daniel Orellana</h1>
 	<div id="calculadora" >
-		<p id="answer-box">Resultado: <div id="answer"> 0</div></p>
-			Número:<p>
-			<input autofocus type="text" pattern="[0-9.+-]*" size="12" id="num" onClick="vaciar()" onInput="dbg()" readonly="readonly"/><p>
-		</p>
+		<div class="numbers"><div>Número:</div><input autofocus type="text" pattern="[0-9.+-]*" size="12" readonly="readonly" id="num" class="number-box" /></div>
+		<div class="numbers"><div>Resultado:</div> <div class="number-box" id="answer"> 0</div></div>
 		<div id="op-buttons">
 			<button id="mas" onClick="calcular(0)">+</button>
 			<button id="menos" onClick="calcular(1)">-</button>
@@ -240,6 +263,6 @@
 			<button id="igual" onClick="igual()">=</button>
 		</div>
 	</div>
-	<div id="historial"></div>
+	<div id="historial">Historial</div>
 </body>
 </html>
