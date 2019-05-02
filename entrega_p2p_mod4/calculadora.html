@@ -65,11 +65,11 @@
 	#igual { grid-area: igual; }
 	#historial {
 		padding: 1em;
-	    margin-top: 1em;
-	    border: 1px solid black;
-	    background-color: lightgrey;
+		margin-top: 1em;
+		border: 1px solid black;
+		background-color: lightgrey;
 		font-family: "Open Sans", sans-serif;
-	    font-size: 16px;
+		font-size: 16px;
 	}
 </style>
 <script type="text/javascript">
@@ -105,24 +105,23 @@
 		// Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
 		// Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
 		document.onkeydown = function(e){
-			//historial("key "+e.key);
 			k = e.key;
 			e.preventDefault();
 			if(k === "-" && val === "" && (acc === "0" || next_op !== -1))
 			{
-			    val = k;
-			    num.value = k;
+				val = k;
+				num.value = k;
 			}
 			else if((!isNaN(k)) || k === ".")
 			{	
-			    val = val === ""? k : val + k;
-			    num.value = val;
+				val = val === ""? k : val + k;
+				num.value = val;
 			}
 			else if(k  === "Backspace")
 			{
-			    val = val.substring(0, val.length - 1);
-			    num.value = val;
-			    
+				val = val.substring(0, val.length - 1);
+				num.value = val;
+				
 			}
 			else{
 				switch (k){
@@ -142,12 +141,11 @@
 							calcular(symbol2op[k]);
 						}
 						break;
-					
 				}
 			}
 		};
 	}
-	
+
 	function calcular(op)
 	{
 		if(next_op === -1 && val === "")
@@ -155,12 +153,12 @@
 		else
 			operando = val;
 		if(op === -1)
-		    do_op = next_op;
+			do_op = next_op;
 		else if(op2optype[op] === 1)
-		    do_op = next_op;
+			do_op = next_op;
 		else
-		    do_op = op;
-		
+			do_op = op;
+
 		//historial(((do_op > -1)? op2symbol[do_op] : "") + " " + operando);
 
 		//next_op = op;
@@ -217,10 +215,8 @@
 		//Guardamos la operacion a ejecutar con el siguiente valor introducido
 		if(op2optype[op] === 1)
 			next_op = op;
-		
-		//if(reset_next_op === 1)
-		//	next_op = -1;
-		//mostramos el resultado
+
+			//mostramos el resultado
 		show_acc();
 		//limpiamos el valor de entrada
 		val = "";
@@ -237,10 +233,9 @@
 			calcular(-1);
 			acc = "0";
 		}
-                next_op = -1;
-                clear_input();
-                val = "";
-
+		next_op = -1;
+		clear_input();
+		val = "";
 	}
 
 	function inic ()
@@ -261,7 +256,7 @@
 			<button id="menos" onClick="calcular(1)">-</button>
 			<button id="por" onClick="calcular(2)">*</button>
 			<button id="entre" onClick="calcular(3)">/</button>
-			<button id="elevado" onClick="calcular(4)">x^y</button>	
+			<button id="elevado" onClick="calcular(4)">x^y</button>
 			<button id="cuadrado" onClick="calcular(5)">x<super>2</super></button>
 			<button id="inversa" onClick="calcular(6)">1/x</button>
 			<button id="raiz" onClick="calcular(7)">sqrt(x)</button>
