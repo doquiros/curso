@@ -5,9 +5,14 @@
 <meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css?family=Orbitron:400,700" rel="stylesheet">
 <style>
+	h1 {
+		font-family: "Open Sans", sans-serif;
+	}
 	#calculadora {
+		font-family: "Open Sans", sans-serif;
 		border: 1px solid black;
 		width: auto;
+		max-width:500px;
 		padding: 1em;
 		background-color: lightgrey;
 		background-clip: border-box;
@@ -59,11 +64,12 @@
 	#entera { grid-area: entera; }
 	#igual { grid-area: igual; }
 	#historial {
-	    margin: 1em;
+		padding: 1em;
+	    margin-top: 1em;
 	    border: 1px solid black;
 	    background-color: lightgrey;
-	    font-family: "Orbitron", sans-serif;
-	    font-size: 12px;
+		font-family: "Open Sans", sans-serif;
+	    font-size: 16px;
 	}
 </style>
 <script type="text/javascript">
@@ -263,6 +269,6 @@
 			<button id="igual" onClick="igual()">=</button>
 		</div>
 	</div>
-	<div id="historial">Historial</div>
+	<div id="historial">Historial:<br/></div>
 </body>
 </html>
