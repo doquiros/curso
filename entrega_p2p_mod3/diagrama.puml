@@ -1,0 +1,16 @@
+@startuml
+[*] --> Idle
+Idle: Acc = 0 
+Idle: NextOp = NONE 
+Idle->EntraNumero: Pulsar numeros o '-'
+EntraNumero: Espera por Operacion
+EntraNumero --> OperacionBinaria: Pulsa operacion binaria
+OperacionBinaria: do NextOp
+OperacionBinaria: NextOp = OP
+OperacionBinaria --> EntraNumero
+EntraNumero --> OperacionUnaria: Pulsa operacion unaria
+OperacionUnaria: do OP
+EntraNumero --> FinalizaOperacion: Pulsa '='
+FinalizaOperacion: NextOp = NONE
+FinalizaOperacion --> Idle: Pulsa '='
+@enduml
