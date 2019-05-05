@@ -36,17 +36,33 @@ input {
 #num {
     background-color: white;
 }
-#op-buttons {
+#op-buttons, #bin-op-buttons, #un-op-buttons  {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    grid-template-areas:
-        "mas menos por entre elevado"
-        "cuadrado inversa raiz entera null"
-        "igual igual igual igual igual";
     grid-gap: 1rem;
 }
-#mas { grid-area: mas; }
+#op-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas:
+        "binops"
+        "unops"
+        "csvops"
+        "igual";
+    grid-gap: 1rem;
+}
+
+#op-buttons h2 {
+    border-bottom: 1px solid black;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+#bin-op-buttons { grid-area: binops; }
+#un-op-buttons { grid-area: unops; }
+#csv-op-buttons { grid-area: csvops; }
+
+/* #mas { grid-area: mas; }
 #menos { grid-area: menos; }
 #por { grid-area: por; }
 #entre { grid-area: entre; }
@@ -54,7 +70,7 @@ input {
 #cuadrado { grid-area: cuadrado; }
 #inversa { grid-area: inversa; }
 #raiz { grid-area: raiz; }
-#entera { grid-area: entera; }
+#entera { grid-area: entera; } */
 #igual { grid-area: igual; }
 #historial {
     padding: 1em;
