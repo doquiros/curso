@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculadora</title>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Orbitron:400,700" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" 
+	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+	crossorigin="anonymous"></script>
+<link href="calc-jquery.css" rel="stylesheet" type="text/css">
+</head>
+<body onLoad="inic()">
+	<h1>Bienvenidos a la calculadora de Daniel Orellana</h1>
+	<div id="calculadora" >
+		<div class="numbers"><div>Número:</div><input autofocus type="text" pattern="[0-9.+-]*" size="12" readonly="readonly" id="num" class="number-box" /></div>
+		<div class="numbers"><div>Resultado:</div> <div class="number-box" id="answer"> 0</div></div>
+		<div id="op-buttons">
+			<button onClick="calcular(0)" id="mas">+</button>
+			<button onClick="calcular(1)" id="menos">-</button>
+			<button onClick="calcular(2)" id="por">*</button>
+			<button onClick="calcular(3)" id="entre">/</button>
+			<button onClick="calcular(4)" id="elevado">x^y</button>
+			<button onClick="calcular(5)" id="cuadrado">x<super>2</super></button>
+			<button onClick="calcular(6)" id="inversa">1/x</button>
+			<button onClick="calcular(7)" id="raiz">sqrt(x)</button>
+			<button onClick="calcular(8)" id="entera">int(x)</button>
+			<button onClick="igual()" id="igual">=</button>
+		</div>
+	</div>
+	<div id="historial">Historial:<br/></div>
+	<script src="calc-jquery.js">
+</body>
+</html>

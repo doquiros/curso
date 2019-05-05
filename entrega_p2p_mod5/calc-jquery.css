@@ -1,0 +1,66 @@
+h1 {
+    font-family: "Open Sans", sans-serif;
+}
+#calculadora {
+    font-family: "Open Sans", sans-serif;
+    border: 1px solid black;
+    width: auto;
+    max-width:500px;
+    padding: 1em;
+    background-color: lightgrey;
+    background-clip: border-box;
+}
+input {
+    font-family: "Orbitron", sans-serif;
+    font-size: 20px;
+    text-align: right;
+}
+.number {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.number-box {
+    flex-grow:1;
+    border: 1px solid black;
+    font-size: 20px;
+    margin-left: 1em;
+    width: 12em;
+    font-family: "Orbitron", sans-serif;
+    text-align: right;
+}
+#answer {
+    background-color: olive;
+    margin-bottom: 1em;
+}
+#num {
+    background-color: white;
+}
+#op-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+        "mas menos por entre elevado"
+        "cuadrado inversa raiz entera null"
+        "igual igual igual igual igual";
+    grid-gap: 1rem;
+}
+#mas { grid-area: mas; }
+#menos { grid-area: menos; }
+#por { grid-area: por; }
+#entre { grid-area: entre; }
+#elevado { grid-area: elevado; }
+#cuadrado { grid-area: cuadrado; }
+#inversa { grid-area: inversa; }
+#raiz { grid-area: raiz; }
+#entera { grid-area: entera; }
+#igual { grid-area: igual; }
+#historial {
+    padding: 1em;
+    margin-top: 1em;
+    border: 1px solid black;
+    background-color: lightgrey;
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+}
