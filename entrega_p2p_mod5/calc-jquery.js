@@ -16,24 +16,26 @@
 var max_buttons_per_row = 3;
 var num, val="", acc = "0", next_op = -1;
 var ops = [
-    {type: 1, symbol: "+", keybinding: "+", name: "suma"},
-    {type: 1, symbol: "-", keybinding: "-", name: "resta"},
-    {type: 1, symbol: "*", keybinding: "*", name: "por"},
-    {type: 1, symbol: "/", keybinding: "/", name: "entre"},
-    {type: 1, symbol: "^", keybinding: "^", name: "elevado"},
-    {type: 0, symbol: "^2", keybinding: "", name: "cuadrado"},
-    {type: 0, symbol: "1/x", keybinding: "", name: "inversa"},
-    {type: 0, symbol: "sqrt(x)", keybinding: "", name: "raiz"},
-    {type: 0, symbol: "parte_entera(x)", keybinding: "", name: "entera"},
-    {type: 0, symbol: "2^x", keybinding: "", name: "potencia2"},
-    {type: 0, symbol: "!x", keybinding: "!", name: "factorial"},
+    /* 0*/{type: 1, symbol: "+", keybinding: "+", name: "suma"},
+    /* 1*/{type: 1, symbol: "-", keybinding: "-", name: "resta"},
+    /* 2*/{type: 1, symbol: "*", keybinding: "*", name: "por"},
+    /* 3*/{type: 1, symbol: "/", keybinding: "/", name: "entre"},
+    /* 4*/{type: 1, symbol: "^", keybinding: "^", name: "elevado"},
+    /* 5*/{type: 0, symbol: "^2", keybinding: "", name: "cuadrado"},
+    /* 6*/{type: 0, symbol: "1/x", keybinding: "", name: "inversa"},
+    /* 7*/{type: 0, symbol: "sqrt(x)", keybinding: "", name: "raiz"},
+    /* 8*/{type: 0, symbol: "parte_entera(x)", keybinding: "", name: "entera"},
+    /* 9*/{type: 0, symbol: "2^x", keybinding: "", name: "potencia2"},
+    /*10*/{type: 0, symbol: "!x", keybinding: "!", name: "factorial"},
 ];
 
-function symbol2idx(s){ return ops.findIndex(function(element){element.symbol === s});}
+function symbol2idx(s){ return ops.findIndex(function(element){ return element.symbol === s}); }
 function vaciar () { $("#num").val("");}
-function show_acc()	{ $(answer).html(acc.toString()); }
+function show_acc()	{ $("#answer").html(acc.toString()); }
 function clear_input()	{ $("#num").val("0"); }
-function historial(msg) { $(historial).append(msg); }
+function historial(msg) { $("#historial").append(msg); }
+function factorial(x) { return x===0? 1 : (x * factorial(x - 1));}
+
 function bindKeys()
 {
     // Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
@@ -98,7 +100,7 @@ function calcular(op)
         operando = val;
     if(op === -1)
         do_op = next_op;
-    else if(op2optype[op] === 1)
+    else if(ops[op].type === 1)
         do_op = next_op;
     else
         do_op = op;
@@ -149,6 +151,14 @@ function calcular(op)
             historial("entero("+ operando + ")");
             acc = (+operando >= 0)? Math.floor(operando) : Math.ceil(operando);
             break;
+        case 9://2^n
+            historial("2^" + operando);
+            acc = 2 ** (+operando);
+            break;
+        case 10: //!n
+            historial(operando + "!");
+            acc = factorial((+operando));
+            break;
         default:
             historial("Error: operacion desconocida");
             return;
@@ -157,7 +167,7 @@ function calcular(op)
     if(do_op !== -1)
         historial(" = " + acc + "<br>");
     //Guardamos la operacion a ejecutar con el siguiente valor introducido
-    if(op2optype[op] === 1)
+    if(op !== -1 && ops[op].type === 1)
         next_op = op;
 
         //mostramos el resultado
