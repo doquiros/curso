@@ -18,7 +18,7 @@
  * csv: 2
  */
 var max_buttons_per_row = 3;
-var num, val="", acc = "0", next_op = -1;
+var num, val="", acc = "0", next_op = -1, enabledNoCsv = true;
 var ops = [
     /* 0*/{type: 1, symbol: "+", keybinding: "+", name: "suma"},
     /* 1*/{type: 1, symbol: "-", keybinding: "-", name: "resta"},
@@ -31,7 +31,7 @@ var ops = [
     /* 8*/{type: 0, symbol: "parte_entera(x)", keybinding: "", name: "entera"},
     /* 9*/{type: 0, symbol: "2^x", keybinding: "", name: "potencia2"},
     /*10*/{type: 0, symbol: "!x", keybinding: "!", name: "factorial"},
-    /*11*/{type: 2, symbol: "Sum", keybinding: "s", name: "sumatorio"},
+    /*11*/{type: 2, symbol: "Sum", keybinding: "", name: "sumatorio"},
 ];
 
 function symbol2idx(s){ return ops.findIndex(function(element){ return element.symbol === s}); }
@@ -40,7 +40,11 @@ function show_acc()	{ $("#answer").html(acc.toString()); }
 function clear_input()	{ $("#num").val("0"); }
 function historial(msg) { $("#historial").append(msg); }
 function factorial(x) { return x===0? 1 : (x * factorial(x - 1));}
-
+function enableNoCsv(enable) {
+    $(".un-op").attr("disabled", !enable);
+    $(".bin-op").attr("disabled", !enable);
+    enabledNoCsv = !enable;
+}
 function bindKeys()
 {
     // Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
@@ -62,10 +66,7 @@ function bindKeys()
             val = val === ""? k : val + k;
             $("#num").val(val);
             if(k === ",")
-            {
-                $("#un-op-buttons").attr("disabled", true);
-                $("#bin-op-buttons").attr("disabled", true);
-            }
+                enableNoCsv(false);
         }
         else if(k === "." && (!cur_value.includes(".")))
         {
@@ -88,15 +89,13 @@ function bindKeys()
                 case "=": // tecla enter: igual
                     num.blur(0);
                     igual();
-                    $("#un-op-buttons").attr("disabled", false);
-                    $("#bin-op-buttons").attr("disabled", false);
                     break;
                 case "*": // tecla *: suma
                 case "+": // tecla +: suma
                 case "-": // tecla -: resta
                 case "^": // tecla ^: potenciacion
                 case "/": // tecla / : division
-                    if(!isNaN(val))
+                    if(enabledNoCsv && !isNaN(val))
                     {
                         $("#num").blur(0);
                         calcular(symbol2idx(k));
@@ -174,6 +173,14 @@ function calcular(op)
             historial(operando + "!");
             acc = factorial((+operando));
             break;
+        case 11: //!n
+            historial("Sumatorio de " + operando);
+            acc = 0;
+            operando.split(",").forEach(function(element){acc += +element});
+            enableNoCsv(true);
+            clear_input();
+            val = "";
+            break;
         default:
             historial("Error: operacion desconocida");
             return;
@@ -207,7 +214,7 @@ function igual() {
     val = "";
 }
 
-function createButtons(container, type){
+function createButtons(container, type, button_class){
     
     var op_buttons = $(container).html();
     var num_buttons = 0;
@@ -216,7 +223,7 @@ function createButtons(container, type){
     ops.forEach(function(element, index){
             if(element.type === type)
             {
-                op_buttons += "<button onClick=\"calcular("  + index + ")\" id=\"" + element.name + "\" style=\"grid-area: " + element.name + ";\" >" + element.symbol + "</button>";
+                op_buttons += "<button class=\"" + button_class + "\" onClick=\"calcular("  + index + ")\" id=\"" + element.name + "\" style=\"grid-area: " + element.name + ";\" >" + element.symbol + "</button>";
                 if(num_buttons > 0 && ((num_buttons % max_buttons_per_row) === 0))
                     grid_areas += "\" \"";
                 grid_areas += element.name + " ";
@@ -240,9 +247,9 @@ function createButtons(container, type){
 $(function()
     {
         num = $("num");
-        createButtons("#un-op-buttons", 0);
-        createButtons("#bin-op-buttons", 1);
-        createButtons("#csv-op-buttons", 2);
+        createButtons("#un-op-buttons", 0, "un-op");
+        createButtons("#bin-op-buttons", 1, "bin-op");
+        createButtons("#csv-op-buttons", 2, "csv-op");
         bindKeys();
     }
 );
