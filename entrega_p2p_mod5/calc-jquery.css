@@ -7,7 +7,7 @@ h1 {
     width: auto;
     max-width:500px;
     padding: 1em;
-    background-color: lightgrey;
+    background-color: darkgrey;
     background-clip: border-box;
 }
 input {
@@ -36,20 +36,20 @@ input {
 #num {
     background-color: white;
 }
-#op-buttons, #bin-op-buttons, #un-op-buttons  {
+#op-buttons, #bin-op-buttons, #un-op-buttons, #csv-op-buttons  {
     display: grid;
-    grid-gap: 1rem;
+    grid-gap: 0.1rem;
 }
 #op-buttons {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: 4fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
     grid-template-areas:
-        "binops"
-        "unops"
-        "csvops"
-        "igual";
-    grid-gap: 1rem;
+        "binops igual"
+        "unops igual"
+        "csvops igual";
+    grid-gap: 0;
+    grid-column-gap: 1rem;
 }
 
 #op-buttons h2 {
@@ -58,20 +58,66 @@ input {
     font-weight: normal;
 }
 
-#bin-op-buttons { grid-area: binops; }
-#un-op-buttons { grid-area: unops; }
-#csv-op-buttons { grid-area: csvops; }
-
-/* #mas { grid-area: mas; }
-#menos { grid-area: menos; }
-#por { grid-area: por; }
-#entre { grid-area: entre; }
-#elevado { grid-area: elevado; }
-#cuadrado { grid-area: cuadrado; }
-#inversa { grid-area: inversa; }
-#raiz { grid-area: raiz; }
-#entera { grid-area: entera; } */
+#bin-op-container { grid-area: binops; }
+#un-op-container { grid-area: unops; }
+#csv-op-container { grid-area: csvops; }
 #igual { grid-area: igual; }
+
+#un-op-buttons, #bin-op-buttons, #csv-op-buttons {
+    
+}
+
+.un-op, .bin-op, .csv-op {
+    border: 0;
+    /* box-shadow: 2px 2px black; */
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+    font-weight: bold;
+    justify-self: stretch;
+}
+
+.un-op {
+    background-color: darkred;
+    color: white;
+    border: 2px solid darkred;
+}
+
+.bin-op {
+    background-color: darkgreen;
+    color: white;
+    border: 2px solid darkgreen;
+}
+
+.csv-op {
+    background-color: darkblue;
+    color: white;
+    border: 2px solid darkblue;
+}
+
+.un-op:hover, .bin-op:hover, .csv-op:hover {
+    border: 2px solid grey;
+    border-spacing: 0;
+}
+
+#igual { 
+    grid-area: igual;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: rgba(32, 32, 32, 255);
+    color: white;
+    border: 2px solid rgba(32, 32, 32, 255);
+}
+
+.un-op:hover, .bin-op:hover, .csv-op:hover, #igual:hover {
+    border: 2px solid grey;
+    border-spacing: 0;
+}
+
+button:disabled {
+    background-color: darkgrey;
+    border: 2px solid rgba(32, 32, 32, 255);
+}
+
 #historial {
     padding: 1em;
     margin-top: 1em;
