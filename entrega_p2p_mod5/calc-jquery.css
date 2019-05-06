@@ -1,41 +1,69 @@
+:root {
+    --color-text-calculadora: #9c9c9c;
+    --color-text-botones: #acacac;
+    --color-text-input: black;
+    --color-text-answer: black;
+    --color-text-botones-hover: black;
+    --color-text-botones-disabled: black;
+    --color-text-igual: black;
+    --color-text-historial: black;
+
+    --color-background-calculadora: whitesmoke;
+    --color-background-botones: lightgrey;
+    --color-background-input: white;
+    --color-background-answer: white;
+    --color-background-botones-hover:  white;
+    --color-background-botones-disabled: rgba(235,235,235, 255);
+    --color-background-igual: #fa7268;
+    --color-background-historial: lightgrey;
+}
 h1 {
     font-family: "Open Sans", sans-serif;
 }
 #calculadora {
     font-family: "Open Sans", sans-serif;
-    border: 1px solid black;
     width: auto;
     max-width:500px;
     padding: 1em;
-    background-color: darkgrey;
-    background-clip: border-box;
+    color: var(--color-text-calculadora);
+    background-color: var(--color-background-calculadora);
 }
-input {
-    font-family: "Orbitron", sans-serif;
-    font-size: 20px;
-    text-align: right;
-}
-.number {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-.number-box {
-    flex-grow:1;
-    border: 1px solid black;
-    font-size: 20px;
-    margin-left: 1em;
-    width: 12em;
-    font-family: "Orbitron", sans-serif;
-    text-align: right;
-}
-#answer {
-    background-color: olive;
+
+#num-container {
     margin-bottom: 1em;
 }
-#num {
-    background-color: white;
+
+.number {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    justify-items: stretch;
+    align-items: stretch;
 }
+
+.num-label {
+    text-align: left;
+    width: 10em;
+}
+.number-box {
+    border: 1px solid var(--color-background-calculadora);
+    font-size: 20px;
+    width: 70%;
+    font-family: "Orbitron", sans-serif;
+    text-align: right;
+}
+
+#num {
+    background-color: var(--color-background-input);
+    color: var(--color-text-input);
+}
+
+#answer {
+    background-color: var(--color-background-answer);
+    color: var(--color-text-answer);
+}
+
 #op-buttons, #bin-op-buttons, #un-op-buttons, #csv-op-buttons  {
     display: grid;
     grid-gap: 0.1rem;
@@ -53,7 +81,7 @@ input {
 }
 
 #op-buttons h2 {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--color-text-calculadora);
     font-size: 16px;
     font-weight: normal;
 }
@@ -61,11 +89,7 @@ input {
 #bin-op-container { grid-area: binops; }
 #un-op-container { grid-area: unops; }
 #csv-op-container { grid-area: csvops; }
-#igual { grid-area: igual; }
 
-#un-op-buttons, #bin-op-buttons, #csv-op-buttons {
-    
-}
 
 .un-op, .bin-op, .csv-op {
     border: 0;
@@ -73,28 +97,12 @@ input {
     padding: 0.2rem 0.5rem 0.2rem 0.5rem;
     font-weight: bold;
     justify-self: stretch;
+    background-color: var(--color-background-botones);
+    border: 2px solid var(--color-background-botones);
 }
 
-.un-op {
-    background-color: darkred;
-    color: white;
-    border: 2px solid darkred;
-}
-
-.bin-op {
-    background-color: darkgreen;
-    color: white;
-    border: 2px solid darkgreen;
-}
-
-.csv-op {
-    background-color: darkblue;
-    color: white;
-    border: 2px solid darkblue;
-}
-
-.un-op:hover, .bin-op:hover, .csv-op:hover {
-    border: 2px solid grey;
+.un-op:hover:enabled, .bin-op:hover:enabled, .csv-op:hover:enabled {
+    border: 2px solid var(--color-background-botones-hover);
     border-spacing: 0;
 }
 
@@ -103,26 +111,22 @@ input {
     padding: 0.2rem 0.5rem 0.2rem 0.5rem;
     font-weight: bold;
     font-size: 20px;
-    background-color: rgba(32, 32, 32, 255);
-    color: white;
-    border: 2px solid rgba(32, 32, 32, 255);
-}
-
-.un-op:hover, .bin-op:hover, .csv-op:hover, #igual:hover {
-    border: 2px solid grey;
-    border-spacing: 0;
+    background-color: var(--color-background-igual);
+    color: var(--color-text-igual);
+    border: 2px solid var(--color-background-igual);
 }
 
 button:disabled {
-    background-color: darkgrey;
-    border: 2px solid rgba(32, 32, 32, 255);
+    background-color: var(--color-background-botones-disabled);
+    border: 2px solid var(--color-background-botones-disabled);
 }
 
 #historial {
     padding: 1em;
     margin-top: 1em;
-    border: 1px solid black;
-    background-color: lightgrey;
+    width: 70%;
+    background-color: var(--color-background-historial);
+    color: var(--color-text-historial);
     font-family: "Open Sans", sans-serif;
     font-size: 16px;
 }
