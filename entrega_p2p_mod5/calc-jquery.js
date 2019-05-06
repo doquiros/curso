@@ -16,34 +16,42 @@
  * unaria: 0
  * binaria: 1
  * csv: 2
+ *
+ * Usamos un array con la siguiente estructura:
+ * - cada elemento corresponde a una operacion, y el indice el numero mostrado en la lista de arriba.
+ * - cada elemento contiene los siguientes campos:
+ *   - type: tipo de operacion como se muestra mas arriba.
+ *   - symbol: el symbolo que aparece en el botón asociado
+ *   - keybinding: tecla asociada, si la tiene. Si no la tiene vale ""
+ *   - name: el nombre de la operacion. Damos este valor al atributo id del boton.
+ * 
  */
 var max_buttons_per_row = 3;
 var num, val="", acc = "0", next_op = -1, enabledNoCsv = true;
 var ops = [
     /* 0*/{type: 1, symbol: "+", keybinding: "+", name: "suma"},
-    /* 1*/{type: 1, symbol: "-", keybinding: "-", name: "resta"},
-    /* 2*/{type: 1, symbol: "*", keybinding: "*", name: "por"},
-    /* 3*/{type: 1, symbol: "/", keybinding: "/", name: "entre"},
-    /* 4*/{type: 1, symbol: "^", keybinding: "^", name: "elevado"},
-    /* 5*/{type: 0, symbol: "^2", keybinding: "", name: "cuadrado"},
+    /* 1*/{type: 1, symbol: "&minus;", keybinding: "-", name: "resta"},
+    /* 2*/{type: 1, symbol: "&#xd7;", keybinding: "*", name: "por"},
+    /* 3*/{type: 1, symbol: "&#xf7;", keybinding: "/", name: "entre"},
+    /* 4*/{type: 1, symbol: "x<sup>y</sup>", keybinding: "^", name: "elevado"},
+    /* 5*/{type: 0, symbol: "x<sup>2</sup>", keybinding: "", name: "cuadrado"},
     /* 6*/{type: 0, symbol: "1/x", keybinding: "", name: "inversa"},
-    /* 7*/{type: 0, symbol: "sqrt(x)", keybinding: "", name: "raiz"},
+    /* 7*/{type: 0, symbol: "&radic;x", keybinding: "", name: "raiz"},
     /* 8*/{type: 0, symbol: "parte_entera(x)", keybinding: "", name: "entera"},
-    /* 9*/{type: 0, symbol: "2^x", keybinding: "", name: "potencia2"},
-    /*10*/{type: 0, symbol: "!x", keybinding: "!", name: "factorial"},
-    /*11*/{type: 2, symbol: "Sum", keybinding: "", name: "sumatorio"},
+    /* 9*/{type: 0, symbol: "2<sup>n</sup>", keybinding: "", name: "potencia2"},
+    /*10*/{type: 0, symbol: "!n", keybinding: "!", name: "factorial"},
+    /*11*/{type: 2, symbol: "&sum;", keybinding: "", name: "sumatorio"},
+    /*11*/{type: 2, symbol: "&prod;", keybinding: "", name: "producto"},
 ];
 
-function symbol2idx(s){ return ops.findIndex(function(element){ return element.symbol === s}); }
+function key2idx(s){ return ops.findIndex(function(element){ return element.keybinding === s}); }
 function vaciar () { $("#num").val("");}
 function show_acc()	{ $("#answer").html(acc.toString()); }
 function clear_input()	{ $("#num").val("0"); }
 function historial(msg) { $("#historial").append(msg); }
 function factorial(x) { return x===0? 1 : (x * factorial(x - 1));}
-function enableNoCsv(enable) {
-    $(".un-op").attr("disabled", !enable);
-    $(".bin-op").attr("disabled", !enable);
-    enabledNoCsv = !enable;
+function enable_buttons(button_class, enable) {
+    $("."+button_class).attr("disabled", !enable);
 }
 function bindKeys()
 {
@@ -51,22 +59,27 @@ function bindKeys()
     // Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
     $(document).keydown(function(e){
         k = e.key;
-        cur_value = $("#num").val();
+        regex = "^ *$"
+        cur_value = val;
         cur_value = cur_value.split(",");
         cur_value = cur_value[cur_value.length - 1];
-        if(k === "-" && val === "" && (acc === "0" || next_op !== -1))
+        if(k === "-" && regex.match(cur_value) !== null && (acc === "0" || next_op !== -1))
         {
             e.preventDefault();
-            val = k;
-            $("#num").val(k);
+            val += k;
+            $("#num").val(val);
         }
         else if((!isNaN(k)) || k === ",")
         {
             e.preventDefault();
-            val = val === ""? k : val + k;
+            val += k;
             $("#num").val(val);
             if(k === ",")
-                enableNoCsv(false);
+            {
+                enable_buttons("un-op", false);
+                enable_buttons("bin-op", false);
+                enabledNoCsv = false;
+            }
         }
         else if(k === "." && (!cur_value.includes(".")))
         {
@@ -79,7 +92,12 @@ function bindKeys()
             e.preventDefault();
             val = val.substring(0, val.length - 1);
             $("#num").val(val);
-            
+            if(!val.includes(","))
+            {
+                enable_buttons("un-op", true);
+                enable_buttons("bin-op", true);
+                enabledNoCsv = true;
+            }
         }
         else
         {
@@ -98,7 +116,7 @@ function bindKeys()
                     if(enabledNoCsv && !isNaN(val))
                     {
                         $("#num").blur(0);
-                        calcular(symbol2idx(k));
+                        calcular(key2idx(k));
                     }
                     break;
             }
@@ -146,11 +164,11 @@ function calcular(op)
             acc = +acc / +operando;
             break;
         case 4:  //potenciacion
-            historial(acc + "^" + operando);
+            historial(acc + "<sup>" + operando + "</sup>");
             acc = (+acc) ** (+operando);
             break;
         case 5: //cuadrado
-            historial(operando + "^2");
+            historial(operando + "<sup>2</sup>");
             acc = (+operando) ** 2;
             break;
         case 6: //inversa
@@ -158,7 +176,7 @@ function calcular(op)
             acc = 1 / (+operando);
             break;
         case 7: //raiz
-            historial("sqrt("+ operando + ")");
+            historial("&radic;"+ operando);
             acc = Math.sqrt(+operando);
             break;
         case 8: //parte entera
@@ -166,20 +184,39 @@ function calcular(op)
             acc = (+operando >= 0)? Math.floor(operando) : Math.ceil(operando);
             break;
         case 9://2^n
-            historial("2^" + operando);
+            historial("2<sup>" + operando + "</sup>");
             acc = 2 ** (+operando);
             break;
         case 10: //!n
-            historial(operando + "!");
-            acc = factorial((+operando));
+            if(operando === 0)
+            {
+                historial("0!");
+                acc = 1;
+            }
+            else if(operando < 0)
+            {
+                historial("CUIDADO! El factorial es solo para numeros positivos.<br>");
+                historial("!(" + operando + ")");
+                acc = 0;
+            }
+            else 
+            {
+                if(operando.includes("."))
+                    operando = Math.floor(operando);
+
+                historial(operando + "!");
+                acc = factorial((+operando));
+            }
             break;
-        case 11: //!n
-            historial("Sumatorio de " + operando);
+        case 11: //sumatorio
+            historial("&sum;(" + operando + ")");
             acc = 0;
             operando.split(",").forEach(function(element){acc += +element});
-            enableNoCsv(true);
-            clear_input();
-            val = "";
+            break;
+        case 12: //producto
+            historial("&prod;(" + operando + ")");
+            acc = 1;
+            operando.split(",").forEach(function(element){acc *= +element});
             break;
         default:
             historial("Error: operacion desconocida");
@@ -189,6 +226,7 @@ function calcular(op)
     if(do_op !== -1)
         historial(" = " + acc + "<br>");
     //Guardamos la operacion a ejecutar con el siguiente valor introducido
+    next_op = -1;
     if(op !== -1 && ops[op].type === 1)
         next_op = op;
 
@@ -196,6 +234,13 @@ function calcular(op)
     show_acc();
     //limpiamos el valor de entrada
     val = "";
+    if(op !== -1 && ops[op].type === 2)
+    {
+        enable_buttons("bin-op", true);
+        enable_buttons("un-op", true);
+        enabledNoCsv = true;
+        clear_input();
+    }
 }
 
 function igual() {
