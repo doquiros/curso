@@ -8,10 +8,14 @@
  * inversa: 6
  * raiz: 7
  * parte entera: 8
+ * 2 elevado a N: 9
+ * factorial: 10
+ * sumatorio: 11
  * 
  * Y otro numero para el tipo de operacion:
  * unaria: 0
  * binaria: 1
+ * csv: 2
  */
 var max_buttons_per_row = 3;
 var num, val="", acc = "0", next_op = -1;
@@ -27,6 +31,7 @@ var ops = [
     /* 8*/{type: 0, symbol: "parte_entera(x)", keybinding: "", name: "entera"},
     /* 9*/{type: 0, symbol: "2^x", keybinding: "", name: "potencia2"},
     /*10*/{type: 0, symbol: "!x", keybinding: "!", name: "factorial"},
+    /*11*/{type: 2, symbol: "Sum", keybinding: "s", name: "sumatorio"},
 ];
 
 function symbol2idx(s){ return ops.findIndex(function(element){ return element.symbol === s}); }
@@ -42,19 +47,27 @@ function bindKeys()
     // Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
     $(document).keydown(function(e){
         k = e.key;
+        cur_value = $("#num").val();
+        cur_value = cur_value.split(",");
+        cur_value = cur_value[cur_value.length - 1];
         if(k === "-" && val === "" && (acc === "0" || next_op !== -1))
         {
             e.preventDefault();
             val = k;
             $("#num").val(k);
         }
-        else if((!isNaN(k)))
+        else if((!isNaN(k)) || k === ",")
         {
             e.preventDefault();
             val = val === ""? k : val + k;
             $("#num").val(val);
+            if(k === ",")
+            {
+                $("#un-op-buttons").attr("disabled", true);
+                $("#bin-op-buttons").attr("disabled", true);
+            }
         }
-        else if(k === "." && (!$("#num").val().includes(".")))
+        else if(k === "." && (!cur_value.includes(".")))
         {
             e.preventDefault();
             val = val === ""? "0." : val + k;
@@ -75,6 +88,8 @@ function bindKeys()
                 case "=": // tecla enter: igual
                     num.blur(0);
                     igual();
+                    $("#un-op-buttons").attr("disabled", false);
+                    $("#bin-op-buttons").attr("disabled", false);
                     break;
                 case "*": // tecla *: suma
                 case "+": // tecla +: suma
@@ -192,61 +207,42 @@ function igual() {
     val = "";
 }
 
-function createButtons(){
-    var num_un_buttons = 0;
-    var num_bin_buttons = 0;
-    var un_op_buttons = $("#un-op-buttons").html();
-    var bin_op_buttons = $("#bin-op-buttons").html();
-    var un_grid_areas = "\"";
-    var bin_grid_areas = "\"";
-    ops.forEach(function(element, index, array){
-            switch(element.type)
+function createButtons(container, type){
+    
+    var op_buttons = $(container).html();
+    var num_buttons = 0;
+    var grid_areas = "\"";
+
+    ops.forEach(function(element, index){
+            if(element.type === type)
             {
-                case 0:
-                    un_op_buttons += "<button class=\"un-op\" onClick=\"calcular("  + index + ")\" id=\"" + element.name + "\" style=\"grid-area: " + element.name + ";\" >" + element.symbol + "</button>";
-                    if(num_un_buttons > 0 && ((num_un_buttons % max_buttons_per_row) === 0))
-                        un_grid_areas += "\" \"";
-                    un_grid_areas += element.name + " ";
-                    num_un_buttons++;
-                    break;
-                case 1:
-                    bin_op_buttons += "<button class=\"bin-op\" onClick=\"calcular("  + index + ")\" id=\"" + element.name + "\" style=\"grid-area: " + element.name + ";\">" + element.symbol + "</button>";
-                    if(num_bin_buttons > 0 && ((num_bin_buttons % max_buttons_per_row) === 0))
-                        bin_grid_areas += "\" \"";
-                    bin_grid_areas += element.name + " ";
-                    num_bin_buttons++;
-                break;
+                op_buttons += "<button onClick=\"calcular("  + index + ")\" id=\"" + element.name + "\" style=\"grid-area: " + element.name + ";\" >" + element.symbol + "</button>";
+                if(num_buttons > 0 && ((num_buttons % max_buttons_per_row) === 0))
+                    grid_areas += "\" \"";
+                grid_areas += element.name + " ";
+                num_buttons++;
+                $("#"+element.name).css("grid-area", element.name);
             }
-            $("#"+element.name).css("grid-area", element.name);
         }
     );
-    for (var i = 0; (num_un_buttons + i) % max_buttons_per_row !== 0; i++)
-        un_grid_areas += "empty "
-    un_grid_areas += "\"";
-    var un_op_buttons_style = {
-        "grid-template-rows": "repeat("+ Math.ceil(num_un_buttons/max_buttons_per_row) + ", 1fr)",
+
+    for (var i = 0; (num_buttons + i) % max_buttons_per_row !== 0; i++)
+        grid_areas += "empty "
+    grid_areas += "\"";
+    var op_buttons_style = {
+        "grid-template-rows": "repeat("+ Math.ceil(num_buttons/max_buttons_per_row) + ", 1fr)",
         "grid-template-columns": "repeat("+ max_buttons_per_row + ", 1fr)",
-        "grid-template-areas": un_grid_areas
+        "grid-template-areas": grid_areas
     };
-    $("#un-op-buttons").css(un_op_buttons_style);
-    $("#un-op-buttons").html(un_op_buttons);
-    
-    for (var i = 0; (num_bin_buttons + i) % max_buttons_per_row !== 0; i++)
-        bin_grid_areas += "empty "
-    bin_grid_areas += "\"";
-    var bin_op_buttons_style = {
-        "grid-template-rows": "repeat("+ Math.ceil(num_bin_buttons/max_buttons_per_row) + ", 1fr)",
-        "grid-template-columns": "repeat("+ max_buttons_per_row + ", 1fr)",
-        "grid-template-areas": bin_grid_areas
-    };
-    
-    $("#bin-op-buttons").css(bin_op_buttons_style);
-    $("#bin-op-buttons").html(bin_op_buttons);
+    $(container).css(op_buttons_style);
+    $(container).html(op_buttons);
 }
 $(function()
     {
         num = $("num");
-        createButtons();
+        createButtons("#un-op-buttons", 0);
+        createButtons("#bin-op-buttons", 1);
+        createButtons("#csv-op-buttons", 2);
         bindKeys();
     }
 );
