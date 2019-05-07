@@ -69,17 +69,20 @@ function bindKeys()
             val += k;
             $("#num").val(val);
         }
-        else if((!isNaN(k)) || k === ",")
+        if(k === "," && (acc === "0" || next_op !== -1))
         {
             e.preventDefault();
             val += k;
             $("#num").val(val);
-            if(k === ",")
-            {
-                enable_buttons("un-op", false);
-                enable_buttons("bin-op", false);
-                enabledNoCsv = false;
-            }
+            enable_buttons("un-op", false);
+            enable_buttons("bin-op", false);
+            enabledNoCsv = false;
+        }
+        else if((!isNaN(k)) && k !== " ")
+        {
+            e.preventDefault();
+            val += k;
+            $("#num").val(val);
         }
         else if(k === "." && (!cur_value.includes(".")))
         {
@@ -255,6 +258,9 @@ function igual() {
         acc = "0";
     }
     next_op = -1;
+    enable_buttons("bin-op", true);
+    enable_buttons("un-op", true);
+    enabledNoCsv = true;
     clear_input();
     val = "";
 }
