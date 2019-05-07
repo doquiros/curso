@@ -1,45 +1,50 @@
 :root {
     --color-text-calculadora: #9c9c9c;
-    --color-text-botones: #acacac;
+    --color-text-botones: black;
     --color-text-input: black;
     --color-text-answer: black;
     --color-text-botones-hover: black;
-    --color-text-botones-disabled: black;
+    --color-text-botones-disabled: #acacac;
     --color-text-igual: black;
     --color-text-historial: black;
 
-    --color-background-calculadora: whitesmoke;
+    --color-background-calculadora: rgba(240, 240, 240, 255);
     --color-background-botones: lightgrey;
     --color-background-input: white;
     --color-background-answer: white;
     --color-background-botones-hover:  white;
-    --color-background-botones-disabled: rgba(235,235,235, 255);
+    --color-background-botones-disabled: rgba(230,230,230, 255);
     --color-background-igual: #fa7268;
     --color-background-historial: lightgrey;
 }
 h1 {
     font-family: "Open Sans", sans-serif;
+    font-size: 18px;
 }
 #calculadora {
     font-family: "Open Sans", sans-serif;
     width: auto;
     max-width:500px;
+    min-width: 250px;
     padding: 1em;
     color: var(--color-text-calculadora);
     background-color: var(--color-background-calculadora);
+    border-radius: 10px;
 }
 
 #num-container {
     margin-bottom: 1em;
+    grid-area: numbox;
 }
 
 .number {
+    padding: 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-content: center;
-    justify-items: stretch;
-    align-items: stretch;
+    align-content: stretch;
+    justify-items: center;
+    align-items: center;
 }
 
 .num-label {
@@ -47,6 +52,7 @@ h1 {
     width: 10em;
 }
 .number-box {
+    padding: 0;
     border: 1px solid var(--color-background-calculadora);
     font-size: 20px;
     width: 70%;
@@ -71,8 +77,9 @@ h1 {
 #op-buttons {
     display: grid;
     grid-template-columns: 4fr 1fr;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: 1fr repeat(3, 2fr);
     grid-template-areas:
+        "numbox numbox"
         "binops igual"
         "unops igual"
         "csvops igual";
@@ -98,6 +105,7 @@ h1 {
     font-weight: bold;
     justify-self: stretch;
     background-color: var(--color-background-botones);
+    color: var(--color-text-botones);
     border: 2px solid var(--color-background-botones);
 }
 
@@ -118,15 +126,40 @@ h1 {
 
 button:disabled {
     background-color: var(--color-background-botones-disabled);
+    color: var(--color-text-botones-disabled);
     border: 2px solid var(--color-background-botones-disabled);
 }
 
 #historial {
     padding: 1em;
-    margin-top: 1em;
-    width: 70%;
     background-color: var(--color-background-historial);
     color: var(--color-text-historial);
     font-family: "Open Sans", sans-serif;
     font-size: 16px;
+    border-radius: 10px;
+    flex-grow: 1;
+}
+
+
+@media (min-width: 750px) {
+    #calc-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+    }
+    #historial{
+        border-radius: 10px;
+        margin-left: 1em;
+    }
+}
+
+@media (max-width: 750px) {
+    #calc-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    #historial{
+        margin-top: 1em;
+    }
 }
