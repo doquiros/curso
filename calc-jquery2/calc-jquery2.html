@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculadora</title>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Orbitron:400,700" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" 
+	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+	crossorigin="anonymous"></script>
+<link href="calc-jquery2.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<h1>Bienvenidos a la calculadora de Daniel Orellana</h1>
+	<div id="calc-container">
+		<div id="calculadora" >
+			<div id="num-container" >
+				<div class="number"><div class="num-label">Número:</div><input autofocus type="text" pattern="[0-9.+-]*" size="12" id="num" class="number-box" /></div>
+				<div class="number"><div class="num-label">Resultado:</div> <div class="number-box" id="answer"> 0</div></div>
+			</div>
+			<div id="op-buttons">
+				<div id="bin-op-container"> 
+				<h2>Operaciones binarias:</h2>
+				<div id="bin-op-buttons"></div>
+				</div>
+				<div id="un-op-container">
+				<h2>Operaciones unitarias:</h2>
+				<div id="un-op-buttons"></div>
+				</div>
+				<div id="csv-op-container"> 
+				<h2>Operaciones csv:</h2>
+				<div id="csv-op-buttons"></div>
+				</div>
+				<button onClick="igual()" id="igual">=</button>
+			</div>
+		</div>
+		<div id="historial">Historial:<br/></div>
+	</div>
+	<script src="calc-jquery2.js"></script>
+</body>
+</html>
