@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculadora</title>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Orbitron:400,700" rel="stylesheet">
+<style>
+	h1 {
+		font-family: "Open Sans", sans-serif;
+	}
+	#calculadora {
+		font-family: "Open Sans", sans-serif;
+		border: 1px solid black;
+		width: auto;
+		max-width:500px;
+		padding: 1em;
+		background-color: lightgrey;
+		background-clip: border-box;
+	}
+	input {
+		font-family: "Orbitron", sans-serif;
+		font-size: 20px;
+		text-align: right;
+	}
+	.number {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+	.number-box {
+		flex-grow:1;
+		border: 1px solid black;
+		font-size: 20px;
+		margin-left: 1em;
+		width: 12em;
+		font-family: "Orbitron", sans-serif;
+		text-align: right;
+	}
+	#answer {
+		background-color: olive;
+		margin-bottom: 1em;
+	}
+	#num {
+		background-color: white;
+	}
+	#op-buttons {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+		grid-template-areas:
+			"mas menos por entre elevado"
+			"cuadrado inversa raiz entera null"
+			"igual igual igual igual igual";
+		grid-gap: 1rem;
+	}
+	#mas { grid-area: mas; }
+	#menos { grid-area: menos; }
+	#por { grid-area: por; }
+	#entre { grid-area: entre; }
+	#elevado { grid-area: elevado; }
+	#cuadrado { grid-area: cuadrado; }
+	#inversa { grid-area: inversa; }
+	#raiz { grid-area: raiz; }
+	#entera { grid-area: entera; }
+	#igual { grid-area: igual; }
+	#historial {
+		padding: 1em;
+		margin-top: 1em;
+		border: 1px solid black;
+		background-color: lightgrey;
+		font-family: "Open Sans", sans-serif;
+		font-size: 16px;
+	}
+</style>
+<script type="text/javascript">
+	/* Asociamos un numero a cada operacion:
+	 * suma: 0
+	 * resta: 1
+	 * producto: 2
+	  division: 3
+	 * potenciacion: 4
+	 * cuadrado: 5
+	 * inversa: 6
+	 * raiz: 7
+	 * parte entera: 8
+	 * 
+	 * Y otro numero para el tipo de operacion:
+	 * unaria: 0
+	 * binaria: 1
+	 */
+
+	var num, val="", acc = "0", next_op = -1;
+	var op2optype = [1, 1, 1, 1, 1, 0, 0, 0, 0];
+	
+	// Para las operaciones binarias se puede usar el teclado:
+	var symbol2op = {"+":0, "-":1, "*":2, "/":3, "^": 4}
+	var op2symbol = {0:"+", 1:"-", 2:"*", 3:"/", 4:"^", 5:"^2", 6: "1/x", 7: "sqrt()", 8: "int()"}
+	
+	function vaciar () { num.value = "";}
+	function show_acc()	{ document.getElementById("answer").innerHTML = acc.toString(); }
+	function clear_input()	{ num.value = "0"; }
+	function historial(msg) { document.getElementById("historial").innerHTML = document.getElementById("historial").innerHTML + msg; }
+	function bindKeys()
+	{
+		// Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
+		// Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
+		document.onkeydown = function(e){
+			k = e.key;
+			e.preventDefault();
+			if(k === "-" && val === "" && (acc === "0" || next_op !== -1))
+			{
+				val = k;
+				num.value = k;
+			}
+			else if((!isNaN(k)) || k === ".")
+			{	
+				val = val === ""? k : val + k;
+				num.value = val;
+			}
+			else if(k  === "Backspace")
+			{
+				val = val.substring(0, val.length - 1);
+				num.value = val;
+				
+			}
+			else{
+				switch (k){
+					case "Enter":
+					case "=": // tecla enter: igual
+						num.blur(0);
+						igual();
+						break;
+					case "*": // tecla *: suma
+					case "+": // tecla +: suma
+					case "-": // tecla -: resta
+					case "^": // tecla ^: potenciacion
+					case "/": // tecla / : division
+						if(!isNaN(val))
+						{
+							num.blur(0);
+							calcular(symbol2op[k]);
+						}
+						break;
+				}
+			}
+		};
+	}
+
+	function calcular(op)
+	{
+		if(next_op === -1 && val === "")
+			operando = acc;
+		else
+			operando = val;
+		if(op === -1)
+			do_op = next_op;
+		else if(op2optype[op] === 1)
+			do_op = next_op;
+		else
+			do_op = op;
+
+		//historial(((do_op > -1)? op2symbol[do_op] : "") + " " + operando);
+
+		//next_op = op;
+		//reset_next_op = 1;
+		// Cargar nuevo valor, ejecutando la operacion que nos ordenaron:
+		switch(do_op)
+		{
+			case -1: //asignacion
+				acc = +operando;
+				break;
+			case 0: //suma
+				historial(acc + " + " + operando);	
+				acc = +acc + +operando;			    
+				break;
+			case 1: //resta
+				historial(acc + " - " + operando);
+				acc = +acc - +operando;
+				break;
+			case 2:  //producto
+				historial(acc + " * " + operando);
+				acc = +acc * +operando;
+				break;
+			case 3:  //division
+				historial(acc + " / " + operando);
+				acc = +acc / +operando;
+				break;
+			case 4:  //potenciacion
+				historial(acc + "^" + operando);
+				acc = (+acc) ** (+operando);
+				break;
+			case 5: //cuadrado
+				historial(operando + "^2");
+				acc = (+operando) ** 2;
+				break;
+			case 6: //inversa
+				historial("1/" + operando);
+				acc = 1 / (+operando);
+				break;
+			case 7: //raiz
+				historial("sqrt("+ operando + ")");
+				acc = Math.sqrt(+operando);
+				break;
+			case 8: //parte entera
+				historial("entero("+ operando + ")");
+				acc = (+operando >= 0)? Math.floor(operando) : Math.ceil(operando);
+				break;
+			default:
+				historial("Error: operacion desconocida");
+				return;
+		}
+		acc = acc.toString();
+		if(do_op !== -1)
+		  historial(" = " + acc + "<br>");
+		//Guardamos la operacion a ejecutar con el siguiente valor introducido
+		if(op2optype[op] === 1)
+			next_op = op;
+
+			//mostramos el resultado
+		show_acc();
+		//limpiamos el valor de entrada
+		val = "";
+	}
+
+	function igual() {
+		if(next_op !== -1)
+		{			
+			calcular(-1);
+		}
+		else
+		{
+			next_op=0;
+			calcular(-1);
+			acc = "0";
+		}
+		next_op = -1;
+		clear_input();
+		val = "";
+	}
+
+	function inic ()
+	{
+		num = document.getElementById("num");
+		bindKeys();
+	}
+
+</script>
+</head>
+<body onLoad="inic()">
+	<h1>Bienvenidos a la calculadora de Daniel Orellana</h1>
+	<div id="calculadora" >
+		<div class="numbers"><div>Número:</div><input autofocus type="text" pattern="[0-9.+-]*" size="12" readonly="readonly" id="num" class="number-box" /></div>
+		<div class="numbers"><div>Resultado:</div> <div class="number-box" id="answer"> 0</div></div>
+		<div id="op-buttons">
+			<button onClick="calcular(0)" id="mas">+</button>
+			<button onClick="calcular(1)" id="menos">-</button>
+			<button onClick="calcular(2)" id="por">*</button>
+			<button onClick="calcular(3)" id="entre">/</button>
+			<button onClick="calcular(4)" id="elevado">x^y</button>
+			<button onClick="calcular(5)" id="cuadrado">x<super>2</super></button>
+			<button onClick="calcular(6)" id="inversa">1/x</button>
+			<button onClick="calcular(7)" id="raiz">sqrt(x)</button>
+			<button onClick="calcular(8)" id="entera">int(x)</button>
+			<button onClick="igual()" id="igual">=</button>
+		</div>
+	</div>
+	<div id="historial">Historial:<br/></div>
+</body>
+</html>

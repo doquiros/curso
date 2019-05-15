@@ -1,0 +1,192 @@
+:root {
+    --color-text-calculadora: #9c9c9c;
+    --color-text-botones: black;
+    --color-text-input: black;
+    --color-text-answer: black;
+    --color-text-botones-hover: black;
+    --color-text-botones-disabled: #acacac;
+    --color-text-igual: black;
+    --color-text-historial: black;
+
+    --color-background-calculadora: rgba(240, 240, 240, 255);
+    --color-background-botones: lightgrey;
+    --color-background-input: white;
+    --color-background-answer: white;
+    --color-background-botones-hover:  white;
+    --color-background-botones-disabled: rgba(230,230,230, 255);
+    --color-background-igual: #fa7268;
+    --color-background-historial: lightgrey;
+}
+h1 {
+    font-family: "Open Sans", sans-serif;
+    font-size: 18px;
+}
+#calculadora {
+    font-family: "Open Sans", sans-serif;
+    flex: 1;
+    width: auto;
+    /* min-width: 450px; */
+    height: 60vh;
+    min-height: 350px;
+    padding: 1em;
+    color: var(--color-text-calculadora);
+    background-color: var(--color-background-calculadora);
+    border-radius: 10px;
+        
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-template-rows: repeat(4, auto);
+    grid-template-areas:
+        "numbox numbox"
+        "binops igual"
+        "unops igual"
+        "csvops igual";
+    grid-gap: 0;
+    grid-column-gap: 1rem;
+}
+
+#num-container {
+    margin-bottom: 1em;
+    grid-area: numbox;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid green;
+}
+
+.number {
+    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: stretch;
+    justify-items: center;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.num-label {
+    text-align: left;
+    width: 10em;
+    vertical-align: middle;
+}
+.number-box {
+    padding: 0;
+    border: 1px solid var(--color-background-calculadora);
+    font-size: 2em;
+    line-height: 2em;
+    font-family: "Orbitron", sans-serif;
+    flex-grow: 1;
+    height: 90%;
+    text-align: right;
+    vertical-align: middle;
+}
+
+#num {
+    background-color: var(--color-background-input);
+    color: var(--color-text-input);
+}
+
+#answer {
+    background-color: var(--color-background-answer);
+    color: var(--color-text-answer);
+}
+
+#op-buttons, #bin-op-buttons, #un-op-buttons, #csv-op-buttons  {
+    display: grid;
+    grid-gap: 0.1rem;
+}
+#op-buttons {
+    flex-grow: 1;
+}
+
+h2 {
+    border-bottom: 1px solid var(--color-text-calculadora);
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.op-buttons-container-class {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-content: stretch;
+    justify-items: stretch;
+    align-items: stretch;
+    border: 1px solid orange;
+}
+
+.op-buttons-class {
+    flex-grow: 1;
+}
+
+#bin-op-container { grid-area: binops;}
+#un-op-container  { grid-area: unops; }
+#csv-op-container { grid-area: csvops;}
+
+
+.un-op, .bin-op, .csv-op {
+    border: 0;
+    /* box-shadow: 2px 2px black; */
+    /* padding: 0.2rem 0.5rem 0.2rem 0.5rem;*/
+    font-weight: bold;
+    justify-self: stretch;
+    background-color: var(--color-background-botones);
+    color: var(--color-text-botones);
+    border: 2px solid var(--color-background-botones);
+}
+
+.un-op:hover:enabled, .bin-op:hover:enabled, .csv-op:hover:enabled {
+    border: 2px solid var(--color-background-botones-hover);
+    border-spacing: 0;
+}
+
+#igual { 
+    grid-area: igual;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: var(--color-background-igual);
+    color: var(--color-text-igual);
+    border: 2px solid var(--color-background-igual);
+}
+
+button:disabled {
+    background-color: var(--color-background-botones-disabled);
+    color: var(--color-text-botones-disabled);
+    border: 2px solid var(--color-background-botones-disabled);
+}
+
+#historial {
+    padding: 1em;
+    background-color: var(--color-background-historial);
+    color: var(--color-text-historial);
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    border-radius: 10px;
+    flex-grow: 1;
+}
+
+
+@media (min-width: 750px) {
+    #calc-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+    }
+    #historial{
+        border-radius: 10px;
+        margin-left: 1em;
+    }
+}
+
+@media (max-width: 750px) {
+    #calc-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    #historial{
+        margin-top: 1em;
+    }
+}
