@@ -43,6 +43,8 @@ var ops = [
     /*10*/{type: 0, symbol: "!n", keybinding: "!", name: "factorial"},
     /*11*/{type: 2, symbol: "&sum;", keybinding: "", name: "sumatorio"},
     /*11*/{type: 2, symbol: "&prod;", keybinding: "", name: "producto"},
+    /*12*/{type: 3, symbol: "ToM", keybinding: "", name: "ToMem"},
+    /*12*/{type: 3, symbol: "FromM", keybinding: "", name: "FromMem"},
 ];
 
 function key2idx(s){ return ops.findIndex(function(element){ return element.keybinding === s}); }
@@ -231,6 +233,14 @@ function calcular(op)
             val = 1;
             operando.split(",").forEach(function(element){val *= +element});
             break;
+        case 13: //ToM
+            historial("ToM(" + operando + ")");
+            mem = +operando;
+            break;
+        case 14: //FromM
+            historial("FromM() = " + mem)
+            val = mem;
+            break;
         default:
             historial("Error: operacion desconocida");
             return;
@@ -284,7 +294,7 @@ function createButtons(container, type, button_class){
     ops.forEach(function(element, index){
             if(element.type === type)
             {
-                op_buttons += "<button class=\"" + button_class + "\" onClick=\"calcular("  + index + ")\" id=\"" + element.name + "\" style=\"grid-area: " + element.name + ";\" >" + element.symbol + "</button>";
+                op_buttons += "<button class=\"op " + button_class + "\" onClick=\"calcular("  + index + ")\" id=\"" + element.name + "\" style=\"grid-area: " + element.name + ";\" >" + element.symbol + "</button>";
                 if(num_buttons > 0 && ((num_buttons % max_buttons_per_row) === 0))
                     grid_areas += "\" \"";
                 grid_areas += element.name + " ";
@@ -311,7 +321,7 @@ $(function()
         createButtons("#un-op-buttons", 0, "un-op");
         createButtons("#bin-op-buttons", 1, "bin-op");
         createButtons("#csv-op-buttons", 2, "csv-op");
-                
+        createButtons("#mem-op-buttons", 3, "mem-op");
                 
         bindKeys();
     }

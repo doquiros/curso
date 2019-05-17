@@ -26,7 +26,7 @@ h1 {
     flex: 1;
     width: auto;
     min-width: 300px;
-    height: 60vh;
+    height: auto;
     min-height: 350px;
     padding: 1em;
     color: var(--color-text-calculadora);
@@ -35,12 +35,13 @@ h1 {
         
     display: grid;
     grid-template-columns: 4fr 1fr;
-    grid-template-rows: repeat(4, auto);
+    grid-template-rows: repeat(5, auto);
     grid-template-areas:
         "numbox numbox"
         "binops igual"
         "unops igual"
-        "csvops igual";
+        "csvops igual"
+        "memops igual";
     grid-gap: 0;
     grid-column-gap: 1rem;
     margin-bottom: 1em;
@@ -110,9 +111,10 @@ h2 {
 #bin-op-container { grid-area: binops;}
 #un-op-container  { grid-area: unops; }
 #csv-op-container { grid-area: csvops;}
+#mem-op-container { grid-area: memops;}
 
 
-.un-op, .bin-op, .csv-op {
+.op {
     border: 0;
     /* box-shadow: 2px 2px black; */
     /* padding: 0.2rem 0.5rem 0.2rem 0.5rem;*/
