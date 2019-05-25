@@ -38,10 +38,10 @@ h1 {
     grid-template-rows: repeat(5, auto);
     grid-template-areas:
         "numbox numbox"
+        "memops membox"
         "binops igual"
         "unops igual"
-        "csvops igual"
-        "memops igual";
+        "csvops igual";
     grid-gap: 0;
     grid-column-gap: 1rem;
     margin-bottom: 1em;
@@ -112,6 +112,7 @@ h2 {
 #un-op-container  { grid-area: unops; }
 #csv-op-container { grid-area: csvops;}
 #mem-op-container { grid-area: memops;}
+#mem-box-container { grid-area: membox;}
 
 
 .op {
