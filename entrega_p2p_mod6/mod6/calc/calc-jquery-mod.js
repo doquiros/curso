@@ -29,23 +29,7 @@
  */
 var max_buttons_per_row = 3;
 var num, val="", acc = "0", next_op = -1, newVal=1, enabledNoCsv = true;
-var ops = [
-    /* 0*/{type: 1, symbol: "+", keybinding: "+", name: "suma", func: suma},
-    /* 1*/{type: 1, symbol: "&minus;", keybinding: "-", name: "resta", func: resta},
-    /* 2*/{type: 1, symbol: "&#xd7;", keybinding: "*", name: "por", func: por},
-    /* 3*/{type: 1, symbol: "&#xf7;", keybinding: "/", name: "entre", func: entre},
-    /* 4*/{type: 1, symbol: "x<sup>y</sup>", keybinding: "^", name: "elevado", func: elevado},
-    /* 5*/{type: 0, symbol: "x<sup>2</sup>", keybinding: "", name: "cuadrado", func: cuadrado},
-    /* 6*/{type: 0, symbol: "1/x", keybinding: "", name: "inversa", func: inversa},
-    /* 7*/{type: 0, symbol: "&radic;x", keybinding: "", name: "raiz", func: raiz},
-    /* 8*/{type: 0, symbol: "parte_entera(x)", keybinding: "", name: "entera", func: parte_entera},
-    /* 9*/{type: 0, symbol: "2<sup>n</sup>", keybinding: "", name: "potencia2", func: potencia2},
-    /*10*/{type: 0, symbol: "!n", keybinding: "!", name: "factorial", func: factorial},
-    /*11*/{type: 2, symbol: "&sum;", keybinding: "", name: "sumatorio", func: sumatorio},
-    /*11*/{type: 2, symbol: "&prod;", keybinding: "", name: "producto", func: producto},
-    /*12*/{type: 3, symbol: "ToM", keybinding: "", name: "ToMem", func: ToMem},
-    /*12*/{type: 3, symbol: "FromM", keybinding: "", name: "FromMem": func: FromMem},
-];
+
 
 function key2idx(s){ return ops.findIndex(function(element){ return element.keybinding === s}); }
 function show_value(value)	{ $("#num").val(value.toString()); }
@@ -58,12 +42,12 @@ function resta(a, b) { ret = (+a) - (+b); historial((+a) + "-" + (+b) + " = " + 
 function por(a, b) { ret = (+a) * (+b); historial((+a) + "+" + (+b) + " = " + ret); return ret;}
 function entre(a, b) { ret = (+a) / (+b); historial((+a) + "/" + (+b) + " = " + ret); return ret;}
 function elevado(a, b) { ret = (+a) ** (+b); historial((+a) + "^" + (+b) + " = " + ret); return ret;}
-function cuadrado(a) { ret = (+a) ** 2; historial((+a) + "^2 = " + ret); return ret;}
-function inversa(a) { ret = 1 / (+a); historial("1 / " + (+a) + " = " + ret); return ret;}
-function raiz(a) { ret = math.sqrt((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
-function parte_entera(a) { ret = ret > 0? math.floor((+a)): math.ceil((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
-function potencia2(a) { ret = 2 ** (+a); historial("2^" + (+a) + " = " + ret); return ret;}
-function factorial(a) {
+function cuadrado(a, b) { ret = (+a) ** 2; historial((+a) + "^2 = " + ret); return ret;}
+function inversa(a, b) { ret = 1 / (+a); historial("1 / " + (+a) + " = " + ret); return ret;}
+function raiz(a, b) { ret = math.sqrt((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
+function parte_entera(a, b) { ret = ret > 0? math.floor((+a)): math.ceil((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
+function potencia2(a, b) { ret = 2 ** (+a); historial("2^" + (+a) + " = " + ret); return ret;}
+function factorial(a, b) {
     if((+a) < 0)
         historial("Cuidado: no exister el factorial de un numero negativo!") 
     ret = (+a) < 0? 0 : factorial((+a));
@@ -82,8 +66,26 @@ function producto(a) {
     operando.split(",").forEach(function(element){ret *= +element}); 
     historial("&prod;(" + a + ") = " + ret); return ret;
 }
-function ToMem(a) { $("mem-box").val(+a); historial("ToMem(" + a + ")"); return 0;}
-function FromMem() { ret = $("mem-box").val(); historial("FromMem() = " + ret); return ret;}
+function ToMem(a) { $("#mem-box").val(a); historial("ToMem(" + a + ")"); return 0;}
+function FromMem() { ret = $("#mem-box").val(); historial("FromMem() = " + ret); return ret;}
+
+var ops = [
+    /* 0*/{type: 1, symbol: "+", keybinding: "+", name: "suma", func: suma},
+    /* 1*/{type: 1, symbol: "&minus;", keybinding: "-", name: "resta", func: resta},
+    /* 2*/{type: 1, symbol: "&#xd7;", keybinding: "*", name: "por", func: por},
+    /* 3*/{type: 1, symbol: "&#xf7;", keybinding: "/", name: "entre", func: entre},
+    /* 4*/{type: 1, symbol: "x<sup>y</sup>", keybinding: "^", name: "elevado", func: elevado},
+    /* 5*/{type: 0, symbol: "x<sup>2</sup>", keybinding: "", name: "cuadrado", func: cuadrado},
+    /* 6*/{type: 0, symbol: "1/x", keybinding: "", name: "inversa", func: inversa},
+    /* 7*/{type: 0, symbol: "&radic;x", keybinding: "", name: "raiz", func: raiz},
+    /* 8*/{type: 0, symbol: "parte_entera(x)", keybinding: "", name: "entera", func: parte_entera},
+    /* 9*/{type: 0, symbol: "2<sup>n</sup>", keybinding: "", name: "potencia2", func: potencia2},
+    /*10*/{type: 0, symbol: "!n", keybinding: "!", name: "factorial", func: factorial},
+    /*11*/{type: 2, symbol: "&sum;", keybinding: "", name: "sumatorio", func: sumatorio},
+    /*11*/{type: 2, symbol: "&prod;", keybinding: "", name: "producto", func: producto},
+    /*12*/{type: 3, symbol: "ToM", keybinding: "", name: "ToMem", func: ToMem},
+    /*13*/{type: 3, symbol: "FromM", keybinding: "", name: "FromMem", func: FromMem},
+];
 
 function enable_buttons(button_class, enable) {
     $("."+button_class).attr("disabled", !enable);
@@ -190,94 +192,11 @@ function calcular(op)
     //next_op = op;
     //reset_next_op = 1;
     // Cargar nuevo valor, ejecutando la operacion que nos ordenaron:
-    switch(do_op)
-    {
-        case -1: //asignacion
-            acc = +operando;
-            break;
-        case 0: //suma
-            historial(acc + " + " + operando);	
-            val = +acc + +operando;			    
-            break;
-        case 1: //resta
-            historial(acc + " - " + operando);
-            val = +acc - +operando;
-            break;
-        case 2:  //producto
-            historial(acc + " * " + operando);
-            val = +acc * +operando;
-            break;
-        case 3:  //division
-            historial(acc + " / " + operando);
-            val = +acc / +operando;
-            break;
-        case 4:  //potenciacion
-            historial(acc + "<sup>" + operando + "</sup>");
-            val = (+acc) ** (+operando);
-            break;
-        case 5: //cuadrado
-            historial(operando + "<sup>2</sup>");
-            val = (+operando) ** 2;
-            break;
-        case 6: //inversa
-            historial("1/" + operando);
-            val = 1 / (+operando);
-            break;
-        case 7: //raiz
-            historial("&radic;"+ operando);
-            val = Math.sqrt(+operando);
-            break;
-        case 8: //parte entera
-            historial("entero("+ operando + ")");
-            val = (+operando >= 0)? Math.floor(operando) : Math.ceil(operando);
-            break;
-        case 9://2^n
-            historial("2<sup>" + operando + "</sup>");
-            val = 2 ** (+operando);
-            break;
-        case 10: //!n
-            if(operando === 0)
-            {
-                historial("0!");
-                val = 1;
-            }
-            else if(operando < 0)
-            {
-                historial("CUIDADO! El factorial es solo para numeros positivos.<br>");
-                historial("!(" + operando + ")");
-                val = 0;
-            }
-            else 
-            {
-                if(operando.includes("."))
-                    operando = Math.floor(operando);
+    if(do_op == -1)
+        acc = +operando;
+    else
+        val = ops[do_op].func(val, acc)
 
-                historial(operando + "!");
-                val = factorial((+operando));
-            }
-            break;
-        case 11: //sumatorio
-            historial("&sum;(" + operando + ")");
-            val = 0;
-            operando.split(",").forEach(function(element){val += +element});
-            break;
-        case 12: //producto
-            historial("&prod;(" + operando + ")");
-            val = 1;
-            operando.split(",").forEach(function(element){val *= +element});
-            break;
-        case 13: //ToM
-            historial("ToM(" + operando + ")");
-            $("mem-box").val(+operando);
-            break;
-        case 14: //FromM
-            historial("FromM() = " + +$("mem-box").val())
-            val = mem;
-            break;
-        default:
-            historial("Error: operacion desconocida");
-            return;
-    }
     val = val.toString();
     if(do_op !== -1)
         historial(" = " + val + "<br>");
@@ -364,6 +283,7 @@ $(function()
          });
         $( "#num-container" ).droppable({
             drop: function(event, ui){
+                historial("drop "+$("#mem-box").val());
                 calcular(14);
             }
         });
