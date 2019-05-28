@@ -4,16 +4,16 @@
 <title>Calculadora</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css?family=Orbitron:400,700" rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css?family=Orbitron:400,700" rel="stylesheet"> -->
 <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js" 
 	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
 	crossorigin="anonymous"></script> -->
-<link href="../css/bootstrap.css" rel="stylesheet">
-<link rel="stylesheet" href="../js/jquery-ui-1.11.4/jquery-ui.min.css">
-<link href="calc-jquery-mod.css" rel="stylesheet" type="text/css">
-<script src="../js/jquery-1.11.2.min.js"></script>
-<script src="../js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
-<script src="../js/bootstrap.js"></script>
+<link href="css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" href="js/jquery-ui-1.11.4/jquery-ui.min.css">
+<link href="css/calc-jquery-mod.css" rel="stylesheet" type="text/css">
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+<script src="js/bootstrap.js"></script>
 </head>
 <body>
 <div class="container">
@@ -29,8 +29,8 @@
 		</div>
 		<div class="collapse navbar-collapse" id="miMenu">
 			<ul class="nav navbar-nav">
-			<li><a href="../10-index.html">INICIO</a></li>
-			<li class="active"><a href="../10-ejercicio_puzzle.html">PUZZLE</a></li>
+			<li><a href="index.html">INICIO</a></li>
+			<li class="active"><a href="ejercicio_puzzle.html">PUZZLE</a></li>
 			<li class="active"><a href="calc-jquery-mod.html">CALCULADORA</a></li>
 			<li><a href="#">Opción 4</a></li> 
 			<li><a href="#">Opción 5</a></li> 
@@ -42,20 +42,15 @@
 	<div id="calc-container">
 		<div id="calculadora" >
 			<div id="num-container" >
-				<div class="number"><input autofocus type="text" pattern="[0-9.+-]*" size="12" readonly="readonly" id="num" 
-										class="number-box"/>
+				<div contentEditable="true" id="num" class="number-box" draggable="true"></div>
 			</div>
 			
 			<div class="op-buttons-container-class" id="mem-op-container"> 
-				<h2>Operaciones memoria:</h2>
+				<h2>Memoria:</h2>
+				<div class="number-box" id="mem" draggable="true"></div>
 				<div class="op-buttons-class" id="mem-op-buttons"></div>
 			</div>
-			<div class="mem-box-container-class" id="mem-box-container"></div>
-				<h2>Memoria</h2>
-				<div id="draggable"  draggable="true">
-					<input class="mem-box-class" id="mem-box" readonly="readonly"/>
-				</div>
-			</div>
+				
 			<div class="op-buttons-container-class" id="bin-op-container"> 
 				<h2>Operaciones binarias:</h2>
 				<div class="op-buttons-class" id="bin-op-buttons"></div>
@@ -76,6 +71,6 @@
 	
 	<div class="panel-footer">Daniel Orellana</div>
 	</div>
-	<script src="calc-jquery-mod.js"></script>
+	<script src="js/calc-jquery-mod.js"></script>
 </body>
 </html>

@@ -32,8 +32,8 @@ var num, val="", acc = "0", next_op = -1, newVal=1, enabledNoCsv = true;
 
 
 function key2idx(s){ return ops.findIndex(function(element){ return element.keybinding === s}); }
-function show_value(value)	{ $("#num").val(value.toString()); }
-function clear_input()	{ $("#num").val("0"); }
+function show_value(value)	{ $("#num").html(value.toString()); }
+function clear_input()	{ $("#num").html("0"); }
 function historial(msg) { $("#historial").append(msg + "<br>"); }
 function fact(x) { return x===0? 1 : (x * fact(x - 1));}
 
@@ -44,8 +44,8 @@ function entre(a, b) { ret = (+a) / (+b); historial((+a) + "/" + (+b) + " = " + 
 function elevado(a, b) { ret = (+a) ** (+b); historial((+a) + "^" + (+b) + " = " + ret); return ret;}
 function cuadrado(a, b) { ret = (+a) ** 2; historial((+a) + "^2 = " + ret); return ret;}
 function inversa(a, b) { ret = 1 / (+a); historial("1 / " + (+a) + " = " + ret); return ret;}
-function raiz(a, b) { ret = math.sqrt((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
-function parte_entera(a, b) { ret = ret > 0? math.floor((+a)): math.ceil((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
+function raiz(a, b) { ret = Math.sqrt((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
+function parte_entera(a, b) { ret = ret > 0? Math.floor((+a)): Math.ceil((+a)); historial("&radic;" + (+a) + " = " + ret); return ret;}
 function potencia2(a, b) { ret = 2 ** (+a); historial("2^" + (+a) + " = " + ret); return ret;}
 function factorial(a, b) {
     if((+a) < 0)
@@ -55,19 +55,19 @@ function factorial(a, b) {
     historial((+a) + "! = " + ret);
     return ret;
 }
-function sumatorio(a) { 
+function sumatorio(a, b) { 
     ret = 0;
     operando.split(",").forEach(function(element){ret += +element}); 
     historial("&sum;(" + a + ") = " + ret);
     return ret;
 }
-function producto(a) { 
+function producto(a, b) { 
     ret = 1;
     operando.split(",").forEach(function(element){ret *= +element}); 
     historial("&prod;(" + a + ") = " + ret); return ret;
 }
-function ToMem(a) { $("#mem-box").val(a); historial("ToMem(" + a + ")"); return 0;}
-function FromMem() { ret = $("#mem-box").val(); historial("FromMem() = " + ret); return ret;}
+function ToMem(a, b) { $("#mem").html(a); historial("ToMem(" + a + ")"); return a;}
+function FromMem(a, b) { ret = $("#mem").html(); historial("FromMem() = " + ret); return ret;}
 
 var ops = [
     /* 0*/{type: 1, symbol: "+", keybinding: "+", name: "suma", func: suma},
@@ -82,9 +82,9 @@ var ops = [
     /* 9*/{type: 0, symbol: "2<sup>n</sup>", keybinding: "", name: "potencia2", func: potencia2},
     /*10*/{type: 0, symbol: "!n", keybinding: "!", name: "factorial", func: factorial},
     /*11*/{type: 2, symbol: "&sum;", keybinding: "", name: "sumatorio", func: sumatorio},
-    /*11*/{type: 2, symbol: "&prod;", keybinding: "", name: "producto", func: producto},
-    /*12*/{type: 3, symbol: "ToM", keybinding: "", name: "ToMem", func: ToMem},
-    /*13*/{type: 3, symbol: "FromM", keybinding: "", name: "FromMem", func: FromMem},
+    /*12*/{type: 2, symbol: "&prod;", keybinding: "", name: "producto", func: producto},
+    /*13*/{type: 3, symbol: "ToM", keybinding: "", name: "ToMem", func: ToMem},
+    /*14*/{type: 3, symbol: "FromM", keybinding: "", name: "FromMem", func: FromMem},
 ];
 
 function enable_buttons(button_class, enable) {
@@ -104,13 +104,13 @@ function bindKeys()
         {
             e.preventDefault();
             val += k;
-            $("#num").val(val);
+            $("#num").html(val);
         }
         if(k === "," && (acc === "0" || next_op !== -1))
         {
             e.preventDefault();
             val += k;
-            $("#num").val(val);
+            $("#num").html(val);
             enable_buttons("un-op", false);
             enable_buttons("bin-op", false);
             enabledNoCsv = false;
@@ -123,19 +123,19 @@ function bindKeys()
             else
                 val += k;
             newVal = false;
-            $("#num").val(val);
+            $("#num").html(val);
         }
         else if(k === "." && (!cur_value.includes(".")))
         {
             e.preventDefault();
             val = val === ""? "0." : val + k;
-            $("#num").val(val);
+            $("#num").html(val);
         }
         else if(k  === "Backspace")
         {
             e.preventDefault();
             val = val.substring(0, val.length - 1);
-            $("#num").val(val);
+            $("#num").html(val);
             if(!val.includes(","))
             {
                 enable_buttons("un-op", true);
@@ -271,20 +271,31 @@ $(function()
     {
         var draginitpos;
         var draginitoff;
-        num = $("num");
+        num = $("#num");
         createButtons("#un-op-buttons", 0, "un-op");
         createButtons("#bin-op-buttons", 1, "bin-op");
         createButtons("#csv-op-buttons", 2, "csv-op");
         createButtons("#mem-op-buttons", 3, "mem-op");
         
-        $("mem-box").val("0");
-        $( "#draggable" ).draggable({
-            revert: "valid"
-         });
-        $( "#num-container" ).droppable({
+        $("#mem").html("0");
+        $( "#num" ).draggable({
+            revert: "invalid",
+            helper: "clone"
+        });
+        $( "#mem" ).draggable({
+            revert: "invalid",
+            helper: "clone"
+        });
+        $( "#num" ).droppable({
             drop: function(event, ui){
-                historial("drop "+$("#mem-box").val());
+                historial("drop "+$("#mem").html());
                 calcular(14);
+            }
+        });
+        $( "#mem" ).droppable({
+            drop: function(event, ui){
+                historial("drop "+$("#num").html());
+                calcular(13);
             }
         });
         bindKeys();

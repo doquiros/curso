@@ -27,11 +27,11 @@
  * 
  */
 var max_buttons_per_row = 3;
-var num, val="", acc = "0", next_op = -1, enabledNoCsv = true;
+var num, acc = "0", next_op = -1, newNumber=true, enabledNoCsv = true;
 
 function vaciar () { $("#num").val("");}
 function show_acc()	{ $("#answer").html(acc.toString()); }
-function clear_input()	{ $("#num").val("0"); }
+function clear_input()	{ $("#num").val(""); }
 function historial(msg) { $("#historial").append(msg); }
 //function factorial(x) { return x===0? 1 : (x * factorial(x - 1));}
 function enable_buttons(button_class, enable) { $("."+button_class).attr("disabled", !enable); }
@@ -91,29 +91,80 @@ var ops = [
 ];
 function key2idx(s){ return ops.findIndex(function(element){ return element.keybinding === s}); }
 
-
-function bindKeys()
+function validate_input()
 {
-    keysregexp = "[";
-    ops.forEach(function(element) {
-        keysregexp += element.keybinding
-    });
-    keysregexp += "]";
-
-
-    // Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
-    // Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
-    $(document).keydown(function(e){
-        if($("#num").is(":focus"))
+    cur_value = $("#num").val();
+    cur_value = cur_value.split(",");
+    cur_value.forEach(function(element){
+        if(isNaN(element))
         {
-            k = e.key;
-            if(keysregexp.match(k))
-            {
-                val = $("#num").val();
-                calcular(key2idx(k));
-            }
+            historial($("#num").val() + "is an invalid number<br>");
+            return false;
         }
     });
+
+    return true;
+    
+}
+function bindKeys()
+{
+    // Vamos a usar el teclado para introducir los numeros y las operaciones binarias. 
+    // Las unarias tendran que hacerse obligatoriamente pulsando el boton correspondiente con el raton.
+    $("#num").keypress(function(e){
+        k = e.key;
+        if($("#num").is(":focus"))
+        {
+            if(k !== "-" && isNaN(k))
+            {
+                e.preventDefault();
+            }
+            else
+            {
+                if(!newNumber && k === "-")
+                {
+                    e.preventDefault();
+                }
+                if(newNumber)
+                {
+                    $("#num").val("");
+                    newNumber = false;
+                }
+            }
+
+        }
+    });
+    $(document).keydown(function(e){
+        k = e.key;
+        ops.forEach(function(element, index){
+            if(element.keybinding === k)
+            {
+                if(newNumber && next_op !== -1 && k === "-")
+                    return;
+                e.preventDefault();
+                if(!validate_input())
+                    return;
+                calcular(index);
+                return;
+            }
+        });
+        if(k === "," && next_op === -1)
+        {
+            enable_buttons("un-op", false);
+            enable_buttons("bin-op", false);
+            enabledNoCsv = false;
+            newNumber = true;
+            $("#num").val($("#num").val() + ",");
+        }
+        if(k === "Enter" || k === "=")
+        {
+            e.preventDefault();
+            if(!validate_input())
+                return;
+            igual();
+            return;
+        }
+    });
+    
     // $(document).keydown(function(e){
     //     k = e.key;
     //     regex = "^ *$"
@@ -189,7 +240,7 @@ function calcular(op)
     if(next_op === -1 && $("#num").val() === "")
         operando = acc;
     else
-        operando = $("#num").val();//val;
+        operando = $("#num").val();
     if(op === -1)
         do_op = next_op;
     else if(ops[op].type === 1)
@@ -223,20 +274,19 @@ function calcular(op)
         //mostramos el resultado
     show_acc();
     //limpiamos el valor de entrada
-    val = "";
+    clear_input();
+    newNumber = true;
     if(op !== -1 && ops[op].type === 2)
     {
         enable_buttons("bin-op", true);
         enable_buttons("un-op", true);
         enabledNoCsv = true;
-        clear_input();
     }
 }
 
 function igual() {
     if(next_op !== -1)
     {
-        val = $("#num").val();
         calcular(-1);
     }
     else
@@ -250,7 +300,6 @@ function igual() {
     enable_buttons("un-op", true);
     enabledNoCsv = true;
     clear_input();
-    val = "";
 }
 
 function createButtons(container, type, button_class){

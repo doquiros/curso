@@ -26,8 +26,6 @@ h1 {
     flex: 1;
     width: auto;
     min-width: 300px;
-    height: auto;
-    min-height: 350px;
     padding: 1em;
     color: var(--color-text-calculadora);
     background-color: var(--color-background-calculadora);
@@ -54,10 +52,6 @@ h1 {
     flex-direction: column;
 }
 
-.number {
-    padding: 0;
-  }
-
 .number-box {
     padding: 0;
     border: 1px solid var(--color-background-calculadora);
@@ -65,15 +59,22 @@ h1 {
     line-height: 2em;
     font-family: "Orbitron", sans-serif;
     flex-grow: 1;
-    height: 90%;
-    width: 100%;
+    min-height: 2em;
+    min-width: 12em;
     text-align: right;
     vertical-align: middle;
+    background-color: var(--color-background-input);
 }
 
 #num {
+    height: 90%;
     background-color: var(--color-background-input);
     color: var(--color-text-input);
+    width: 100%;
+}
+
+#mem {
+    margin-bottom: 0.5em;
 }
 
 #answer {
@@ -86,7 +87,7 @@ h1 {
     grid-gap: 0.1rem;
 }
 #op-buttons {
-    flex-grow: 1;
+    flex-grow: 0;
 }
 
 h2 {
@@ -105,15 +106,14 @@ h2 {
 }
 
 .op-buttons-class {
-    flex-grow: 1;
+    flex-grow: 0;
 }
 
 #bin-op-container { grid-area: binops;}
 #un-op-container  { grid-area: unops; }
 #csv-op-container { grid-area: csvops;}
 #mem-op-container { grid-area: memops;}
-#mem-box-container { grid-area: membox;}
-
+#mem-container { grid-area: membox;}
 
 .op {
     border: 0;
