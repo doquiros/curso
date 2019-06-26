@@ -8,49 +8,54 @@
 <script type="text/javascript" src="javascript/galeria.js" ></script>
 
 <script>
-var t, actual, editando;
+var t, actual, editando, galeria;
 
 function select(i){
-   actual = i;
-
+  actual = i;
+  
   $("nav a")
-    .removeClass("on off")
-    .addClass(function(j){return(j===i)?"on":"off";});
-
-  $("#persona").html(galeria[i].persona);
-  $("#frase").html(galeria[i].frase);
-  $("#foto").attr("src", galeria[i].foto);
+  .removeClass("on off")
+  .addClass(function(j){return(j===i)?"on":"off";});
+  
+  $("#persona").html(galeria_local[i].persona);
+  $("#frase").html(galeria_local[i].frase);
+  $("#foto").attr("src", galeria_local[i].foto);
 
   clearTimeout(t);
-  t = setTimeout( function(){select((i + 1) % galeria.length);}, 2000);
+  t = setTimeout( function(){select((i + 1) % galeria_local.length);}, 2000);
 }
 
 function generar_selector(){ // regenera la botonera
   var selector = $("#selector");
-
+  
   selector.html("");
   
-  galeria.forEach(function(elem,i) {
+  galeria_local.forEach(function(elem,i) {
     selector.append("<li><a onClick='select("+i+")'></a></li>");
   });
 }
 
 $(function (){
-  
-  var tmp = JSON.parse(localStorage.getItem("galeria"));
-  if(!!tmp)
-    galeria = tmp;
+  try
+  {
+    var tmp = JSON.parse(localStorage.getItem("galeria"));
+    galeria_local = tmp;
+  }
+  catch(e)
+  {
+    galeria_local = galeria;
+  }
   editando = 0;
   generar_selector();
-
+  
   $("#editar").on("click", function(){
     clearTimeout(t);
     if(editando === 0)
     {
       editando = 1;
-      $("#persona_d").html(galeria[actual].persona);
-      $("#frase_d").html(galeria[actual].frase);
-      $("#foto_d").html(galeria[actual].foto);
+      $("#persona_d").html(galeria_local[actual].persona);
+      $("#frase_d").html(galeria_local[actual].frase);
+      $("#foto_d").html(galeria_local[actual].foto);
       $("#datos").css("display", "block");
     }
     else
@@ -66,10 +71,10 @@ $(function (){
 
   $("#guardar").on("click", function(){
     editando = 0;
-    galeria[actual].persona = $("#persona_d").html();
-    galeria[actual].frase = $("#frase_d").html();
-    galeria[actual].foto = $("#foto_d").html();
-    localStorage.setItem("galeria", JSON.stringify(galeria))
+    galeria_local[actual].persona = $("#persona_d").html();
+    galeria_local[actual].frase = $("#frase_d").html();
+    galeria_local[actual].foto = $("#foto_d").html();
+    localStorage.setItem("galeria", JSON.stringify(galeria_local))
     generar_selector();
     $("#persona_d").html();
     $("#frase_d").html();
@@ -82,12 +87,12 @@ $(function (){
     editando = 0;
     $("#datos").css("display", "none");
     
-    actual = galeria.push({
+    actual = galeria_local.push({
       persona:$("#persona_d").html(),
       frase:$("#frase_d").html(),
       foto:$("#foto_d").html()
     }) - 1;
-    localStorage.setItem("galeria", JSON.stringify(galeria))
+    localStorage.setItem("galeria_local", JSON.stringify(galeria_local))
     generar_selector();
 
     select(actual);
@@ -96,15 +101,26 @@ $(function (){
   $("#borrar").on("click", function(){
     $("#datos").css("display", "none");
 
-    galeria.splice(actual, 1);
-    if(actual >= galeria.length)
+    galeria_local.splice(actual, 1);
+    if(actual >= galeria_local.length)
       actual = 0;
     else
       actual = actual - 1;
-      $("#persona_d").html(galeria[actual].persona);
-      $("#frase_d").html(galeria[actual].frase);
-      $("#foto_d").html(galeria[actual].foto);
+      $("#persona_d").html(galeria_local[actual].persona);
+      $("#frase_d").html(galeria_local[actual].frase);
+      $("#foto_d").html(galeria_local[actual].foto);
       generar_selector();
+    })
+
+  $("#restaurar").on("click", function(){
+      var ok = confirm("Va a restaurar la galeria por defecto. Sus cambios se perderan. ¿Continuar?");
+      if(ok)
+      {
+        galeria_local = galeria;
+        localStorage.setItem("galeria_local", null);
+      }
+      generar_selector();
+      select(0);
     })
   select(0);
 });
@@ -135,6 +151,7 @@ $(function (){
         <li><img src="images/edit-black.svg" alt="" id="guardar"/></li>
         <li><img src="images/plus-black.svg" alt="" id="nuevo"/></li>
         <li><img src="images/delete-black.svg" alt="" id="borrar"/></li>
+        <li><img src="images/restore.svg" alt="" id="restaurar"/></li>
       </ul>
     </div>
   </section>
