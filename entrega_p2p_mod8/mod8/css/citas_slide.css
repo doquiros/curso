@@ -121,5 +121,21 @@ div #botones ul li img:hover {
 	background-color: white;
 }
 
-
+.restore {
+	background-color: #626262;
+	padding: 0.2em;
+	text-align: right;
+	height:28px;
+	cursor:pointer;
+	display:none;
+}
+.restore img {
+	padding: 0px;
+	border-radius:50%;
+	width:26px;
+	height:26px;
+}
+.restore:hover > img {
+	background-color: #000000;
+}
 
