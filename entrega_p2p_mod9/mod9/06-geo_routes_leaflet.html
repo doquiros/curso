@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>leaflet & leaflet-routing-machine &mdash; Geolocation</title>
+  <link rel="stylesheet" href="leaflet.css"/>
+  <link rel="stylesheet" href="leaflet-routing-machine.css" />
+
+  <script type="text/javascript" src="zepto.min.js"></script>
+  <script type="text/javascript" src="leaflet.js"></script>
+  <script src="leaflet-routing-machine.js"></script>
+  <link rel="stylesheet" type="text/css" href="mypath.css" />
+  
+</head>
+<body>
+  <h1>Geolocalización</h1>
+  <div id="map"></div>
+  <script type="text/javascript">
+    var map = L.map('map');
+    var route;
+    var latlng0, latlng;
+    var markers;
+
+    function compactar() {
+      
+      route.setWaypoints([]);
+      map.removeControl(route);
+      map.removeControl(markers);
+      
+      route = L.Routing.control({
+        waypoints: [
+          latlng0,
+          latlng
+        ],
+        routeWhileDragging: false,
+        showAlternatives: false,
+        collapsible: false,
+      }).addTo(map);
+      route.hide();
+
+      markers = L.layerGroup();
+      markers.addLayer(L.marker(latlng));  // pone marcador en mapa
+      markers.addLayer(L.marker(latlng0));  // pone marcador en mapa
+      map.addLayer(markers);
+    }
+    function enlazarMarcador(e){
+      
+      if(!route)
+      {
+      route = L.Routing.control({
+        waypoints: [
+          latlng,
+          e.latlng
+        ],
+        routeWhileDragging: false,
+        showAlternatives: false,
+        collapsible: false,
+      }).addTo(map);
+      route.hide();
+      }
+      else
+      {
+        wp = route.getWaypoints()
+        route.spliceWaypoints(wp.length, 0, e.latlng)
+      }
+
+      latlng = e.latlng
+
+      markers.addLayer(L.marker(latlng));  // pone marcador en mapa y añadir al layergroup markers
+    }; 
+
+    function onLocationFound(e){
+      latlng0 = latlng = e.latlng;
+      L.marker(latlng).addTo(map);  // marcador en [lat, lng]
+      map.setView(latlng, 15);
+    }
+    function onLocationError(e) { alert('Geolocalización falla: '+error.message); }
+    
+    function geolocalizar(){
+      
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}{r}.png', {
+          attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      markers = L.layerGroup();
+      markers.addTo(map);
+
+      map.locate({setView: true, maxZoom: 30});
+      map.on('locationfound', onLocationFound);
+      map.on('locationerror', onLocationError);
+      map.on('click', enlazarMarcador);
+      map.on('tap', enlazarMarcador);
+    };
+
+    $(function(){
+      geolocalizar();
+    });
+  </script>
+
+<div id="compactar"><button onclick="compactar()">Compactar</button></div>
+</body>
+</html>

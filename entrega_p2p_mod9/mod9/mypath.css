@@ -17,16 +17,17 @@ body{
   margin: 0;
   padding: 0;
   position: absolute; /* posición absoluta a navegador */
-  top: 50px;      /* 50px debajo de borde de navegador */
-  left: 0;        /* ajusta a borde de navegador */
+  top: 55px;             /* ajusta a borde de navegador */
+  left: 0;
   right: 0;
-  height: 50px;}
+  height: 50px;
+}
 #map{
   display: block;
   margin: 0;
   padding: 0;
   position: absolute; /* posición absoluta a navegador */
-  top: 100px;      /* 50px debajo de borde de navegador */
+  top: 105px;      /* 50px debajo de borde de navegador */
   left: 0;        /* ajusta a borde de navegador */
   right: 0;
   bottom: 0;
